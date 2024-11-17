@@ -1,0 +1,122 @@
+{% extends 'layout.html' %}
+
+{% block script %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+{% endblock %}
+
+{% block title %} New session {% endblock %}
+
+{% block body %}
+
+<div class="container">
+    
+        <div class="row">
+
+            <!-- date selector -->
+            <div class="col-2">
+                <label for="session_id" class="form-label">Session date</label>
+                <input type="date" class="form-control" id="session_id" >
+            </div>
+
+            <!-- Audio File -->
+            <div class="col-4">
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" id="inputGroupFile02">
+                    <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                  </div>
+            </div>
+
+            <div id="editor">
+
+            </div>
+
+            
+
+            </div>
+
+            <!-- button -->
+            <div class="row">
+                <div class="col-2">
+                    <input type="submit" class="form-control" value="submit">
+                </div>
+            </div>
+        </div>
+
+
+    
+
+    <button type="button" onclick="send_data()" class="btn-primary">Log</button> 
+</div>
+
+<script>
+    const quill = new Quill('#editor', {
+      theme: 'snow'
+    });
+
+    function logText() {
+
+        const text = quill.getSemanticHTML();
+
+        console.log(text)
+        
+    }
+
+    async function send_data() {
+    const session_id = document.getElementById('session_id');
+    const resume = quill.getSemanticHTML();
+
+    console.log(session_id.value);
+    console.log(resume);
+
+    // Validate inputs
+    if (session_id.value === "") {
+        return;
+    }
+
+    if (resume === "<p></p>") {
+        return;
+    }
+
+    // Prepare data for POST request
+    const data = {
+        session: session_id.value,
+        content: resume
+    };
+
+    try {
+        // Send POST request
+        const response = await fetch("process_resume", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse the response
+        const response_data = await response.json();
+
+        // Extract the redirect URL and session ID
+        const redirect_url = response_data.url;
+        const session = response_data.session_id;
+
+        // Redirect to the new URL
+        if (redirect_url && session) {
+            window.location.href = `${redirect_url}?session_id=${session}`;
+        } else {
+            console.error("Invalid response data: Missing URL or session ID.");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+
+
+  </script>
+    
+{% endblock %}
+

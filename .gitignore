@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+sessions/
+0-archive/
+Debug/
+reference/

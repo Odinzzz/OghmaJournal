@@ -1,0 +1,285 @@
+{
+    "name": "Boots of the Winterlands",
+    "type": "equipment",
+    "img": "systems/D35E/icons/items/magic/boots/Boots_31.png",
+    "system": {
+        "originVersion": 103,
+        "originPack": "D35E.magicitems",
+        "originId": "x1Uka4LNMO2VKdeZ",
+        "possibleUpdate": false,
+        "description": {
+            "value": "@LinkedDescription[Compendium.D35E.magicitems.Item.x1Uka4LNMO2VKdeZ]",
+            "chat": "",
+            "unidentified": "<p>A boot is a type of footwear. Most boots mainly cover the foot and the ankle, while some also cover some part of the lower calf. Some boots extend up the leg, sometimes as far as the knee or even the hip. Most boots have a heel that is clearly distinguishable from the rest of the sole, even if the two are made of one piece. Traditionally made of leather.</p>"
+        },
+        "epic": "",
+        "psionic": "",
+        "nameFormula": "",
+        "nameFromFormula": false,
+        "tags": [],
+        "uniqueId": "",
+        "addedLevel": 0,
+        "linkId": "",
+        "linkSourceId": "",
+        "linkImported": false,
+        "linkSourceName": "",
+        "source": "",
+        "classSource": "",
+        "userNonRemovable": false,
+        "customAttributes": {},
+        "customAttributesLocked": false,
+        "customTag": "",
+        "createdBy": "",
+        "quantity": 1,
+        "weight": 1,
+        "constantWeight": true,
+        "price": 2500,
+        "resalePrice": null,
+        "brokenResalePrice": null,
+        "fullResalePrice": false,
+        "identified": true,
+        "identifiedCurse": false,
+        "cursed": false,
+        "curseActive": false,
+        "hp": {
+            "max": 10,
+            "value": 10
+        },
+        "hardness": 0,
+        "carried": true,
+        "unidentified": {
+            "price": 0,
+            "name": "Boots"
+        },
+        "identifiedName": "Boots of the Winterlands",
+        "container": "None",
+        "containerId": "none",
+        "containerWeightless": false,
+        "equippedWeightless": false,
+        "changes": [],
+        "changeFlags": {
+            "loseDexToAC": false,
+            "noStr": false,
+            "noDex": false,
+            "noInt": false,
+            "noCon": false,
+            "oneInt": false,
+            "oneWis": false,
+            "oneCha": false,
+            "noEncumbrance": false,
+            "mediumArmorFullSpeed": false,
+            "heavyArmorFullSpeed": false,
+            "multiAttack": false,
+            "multiweaponAttack": false,
+            "uncannyDodge": false,
+            "hasted": false,
+            "firstChangeTargetSelectableOnDescription": false
+        },
+        "conditionFlags": {
+            "dazzled": false,
+            "wildshaped": false,
+            "polymorphed": false
+        },
+        "combatChanges": [],
+        "combatChangesRange": {
+            "maxFormula": "",
+            "max": 0
+        },
+        "combatChangesAdditionalRanges": {
+            "hasAdditionalRanges": false,
+            "slider1": {
+                "maxFormula": "",
+                "max": 0,
+                "name": ""
+            },
+            "slider2": {
+                "maxFormula": "",
+                "max": 0,
+                "name": ""
+            },
+            "slider3": {
+                "maxFormula": "",
+                "max": 0,
+                "name": ""
+            }
+        },
+        "combatChangesUsesCost": "chargesPerUse",
+        "combatChangesApplySpecialActionsOnce": true,
+        "combatChangeCustomDisplayName": "",
+        "combatChangeCustomReferenceName": "",
+        "sizeOverride": "",
+        "counterName": "",
+        "resistances": [],
+        "damageReduction": [],
+        "requirements": [],
+        "creationChanges": [],
+        "measureTemplate": {
+            "type": "",
+            "size": 0,
+            "overrideColor": false,
+            "customColor": "",
+            "overrideTexture": false,
+            "customTexture": ""
+        },
+        "actionType": "",
+        "attackBonus": "",
+        "critConfirmBonus": "",
+        "damage": {
+            "parts": [],
+            "alternativeParts": []
+        },
+        "summon": [],
+        "attackParts": [],
+        "autoscaleAttackParts": "",
+        "formula": "",
+        "attackCountFormula": "",
+        "maxDamageDice": 0,
+        "maxDamageDiceFormula": "",
+        "ability": {
+            "attack": null,
+            "damage": null,
+            "damageMult": 1,
+            "critRange": 20,
+            "critMult": 2,
+            "twoHandedOnly": false,
+            "vsTouchAc": false
+        },
+        "save": {
+            "dc": 0,
+            "description": "",
+            "ability": "",
+            "type": "",
+            "dcAutoType": "",
+            "dcAutoAbility": "",
+            "originVersion": 97
+        },
+        "baseCl": "0",
+        "sr": false,
+        "pr": false,
+        "metamagicFeats": {
+            "maximized": false,
+            "empowered": false,
+            "enlarged": false,
+            "intensified": false,
+            "enhanced": false,
+            "enhancedHalf": false,
+            "widened": false
+        },
+        "effectNotes": "",
+        "attackNotes": "",
+        "specialActions": [],
+        "favorite": false,
+        "rollTableDraw": {
+            "formula": "",
+            "name": "",
+            "pack": "",
+            "id": ""
+        },
+        "contextNotes": [],
+        "enhancements": {
+            "uses": {
+                "value": 0,
+                "max": 0,
+                "per": null,
+                "rechargeFormula": null,
+                "autoDeductCharges": true,
+                "allowMultipleUses": false,
+                "commonPool": false
+            },
+            "automation": {
+                "updateName": false,
+                "updatePrice": false
+            },
+            "clFormula": "",
+            "spellcastingAbility": "",
+            "items": []
+        },
+        "light": {
+            "color": "#000000",
+            "radius": 0,
+            "opacity": 0,
+            "alpha": 0.5,
+            "lightAngle": 360,
+            "type": "",
+            "animationSpeed": 6,
+            "animationIntensity": 6,
+            "dimRadius": null,
+            "emitLight": false
+        },
+        "material": {
+            "data": null
+        },
+        "equipped": true,
+        "equipmentType": "misc",
+        "equipmentSubtype": "wondrous",
+        "armor": {
+            "value": 0,
+            "dex": null,
+            "acp": 0,
+            "enh": 0
+        },
+        "masterwork": true,
+        "melded": false,
+        "linkedItems": [],
+        "armorType": {
+            "value": "",
+            "_deprecated": true
+        },
+        "spellFailure": 0,
+        "slot": "feet",
+        "activation": {
+            "cost": null,
+            "type": ""
+        },
+        "attack": {
+            "parts": []
+        },
+        "convertedWeight": 1,
+        "senses": {
+            "lowLight": false,
+            "blindsight": null,
+            "darkvision": null,
+            "tremorsense": null,
+            "truesight": null,
+            "lowLightMultiplier": null
+        },
+        "conditionals": [],
+        "activateActions": [],
+        "deactivateActions": [],
+        "perRoundActions": [],
+        "index": {
+            "subType": null,
+            "uniqueId": ""
+        },
+        "selectedMaterial": "none"
+    },
+    "folder": null,
+    "sort": 84700000,
+    "ownership": {
+        "default": 0,
+        "AhPhOo1awIE5mo3t": 3
+    },
+    "flags": {
+        "exportSource": {
+            "world": "test",
+            "system": "D35E",
+            "coreVersion": "0.6.5",
+            "systemVersion": 0.82
+        },
+        "core": {},
+        "scene-packer": {
+            "hash": "87e1793300b104328fd75ad76ed4aba94a2e9a3b",
+            "sourceId": "Item.1mAkCsGMnJN99nUH"
+        }
+    },
+    "_stats": {
+        "systemId": "D35E",
+        "systemVersion": "2.3.2",
+        "coreVersion": "11.308",
+        "createdTime": 1709393342667,
+        "modifiedTime": 1728238983211,
+        "lastModifiedBy": "AhPhOo1awIE5mo3t"
+    },
+    "_id": "brgvdEmXZXLJiW5G",
+    "effects": []
+}

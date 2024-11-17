@@ -1,0 +1,505 @@
+{
+    "name": "Composite Longbow (+3) (Elven) +1",
+    "type": "weapon",
+    "img": "systems/D35E/icons/items/weapons/Bow_09.png",
+    "system": {
+        "originVersion": 100,
+        "originPack": "D35E.magicitems",
+        "originId": "SAC1HJjDnBZBQ4L8",
+        "possibleUpdate": false,
+        "description": {
+            "value": "@LinkedDescription[Compendium.D35E.magicitems.Item.SAC1HJjDnBZBQ4L8]",
+            "chat": "",
+            "unidentified": ""
+        },
+        "epic": "",
+        "psionic": "",
+        "nameFormula": "",
+        "nameFromFormula": false,
+        "tags": [],
+        "uniqueId": "",
+        "addedLevel": 0,
+        "linkId": "",
+        "linkSourceId": "",
+        "linkImported": false,
+        "linkSourceName": "",
+        "source": "",
+        "classSource": "",
+        "userNonRemovable": false,
+        "customAttributes": {},
+        "customAttributesLocked": false,
+        "customTag": "",
+        "createdBy": "",
+        "quantity": 1,
+        "weight": 3,
+        "constantWeight": false,
+        "price": 2700,
+        "resalePrice": null,
+        "brokenResalePrice": null,
+        "fullResalePrice": false,
+        "identified": true,
+        "identifiedCurse": false,
+        "cursed": false,
+        "curseActive": false,
+        "hp": {
+            "max": 5,
+            "value": 5
+        },
+        "hardness": 5,
+        "carried": true,
+        "unidentified": {
+            "price": 400,
+            "name": "Composite Longbow (+3) (Elven)"
+        },
+        "identifiedName": "Composite Longbow (+3) (Elven) +1",
+        "container": "None",
+        "containerId": "none",
+        "containerWeightless": false,
+        "equippedWeightless": false,
+        "changes": [],
+        "changeFlags": {
+            "loseDexToAC": false,
+            "noStr": false,
+            "noDex": false,
+            "noInt": false,
+            "noCon": false,
+            "oneInt": false,
+            "oneWis": false,
+            "oneCha": false,
+            "noEncumbrance": false,
+            "mediumArmorFullSpeed": false,
+            "heavyArmorFullSpeed": false,
+            "multiAttack": false,
+            "multiweaponAttack": false,
+            "uncannyDodge": false,
+            "hasted": false,
+            "firstChangeTargetSelectableOnDescription": false
+        },
+        "conditionFlags": {
+            "dazzled": false,
+            "wildshaped": false,
+            "polymorphed": false
+        },
+        "combatChanges": [],
+        "combatChangesRange": {
+            "maxFormula": "",
+            "max": 0
+        },
+        "combatChangesAdditionalRanges": {
+            "hasAdditionalRanges": false,
+            "slider1": {
+                "maxFormula": "",
+                "max": 0,
+                "name": ""
+            },
+            "slider2": {
+                "maxFormula": "",
+                "max": 0,
+                "name": ""
+            },
+            "slider3": {
+                "maxFormula": "",
+                "max": 0,
+                "name": ""
+            }
+        },
+        "combatChangesUsesCost": "chargesPerUse",
+        "combatChangesApplySpecialActionsOnce": true,
+        "combatChangeCustomDisplayName": "",
+        "combatChangeCustomReferenceName": "",
+        "sizeOverride": "",
+        "counterName": "",
+        "resistances": [],
+        "damageReduction": [],
+        "requirements": [],
+        "creationChanges": [],
+        "contextNotes": [],
+        "enhancements": {
+            "uses": {
+                "value": 0,
+                "max": 0,
+                "per": null,
+                "rechargeFormula": null,
+                "autoDeductCharges": true,
+                "allowMultipleUses": false,
+                "commonPool": false
+            },
+            "automation": {
+                "updateName": true,
+                "updatePrice": true
+            },
+            "clFormula": "",
+            "spellcastingAbility": "",
+            "items": [
+                {
+                    "_id": "Ng5AlRupmkMOgqQi",
+                    "name": "+1 Weapon Enhancement",
+                    "type": "enhancement",
+                    "img": "systems/D35E/icons/crafting-station/enhancements/enhancement-weapon.png",
+                    "effects": [],
+                    "folder": null,
+                    "sort": 3900000,
+                    "flags": {
+                        "core": {
+                            "sourceId": "Compendium.D35E.enhancements.Ng5AlRupmkMOgqQi"
+                        }
+                    },
+                    "system": {
+                        "originVersion": 99,
+                        "originPack": "",
+                        "originId": "",
+                        "possibleUpdate": false,
+                        "description": {
+                            "value": "<p>Magic weapons have enhancement bonuses ranging from +1 to +5. They apply these bonuses to both attack and damage rolls when used in combat. All magic weapons are also masterwork weapons, but their masterwork bonus on attack rolls does not stack with their enhancement bonus on attack rolls.</p>",
+                            "chat": "",
+                            "unidentified": ""
+                        },
+                        "epic": "",
+                        "psionic": "",
+                        "nameFormula": "",
+                        "nameFromFormula": false,
+                        "tags": [],
+                        "uniqueId": "",
+                        "addedLevel": 0,
+                        "linkId": "",
+                        "linkSourceId": "",
+                        "linkImported": false,
+                        "linkSourceName": "",
+                        "source": "",
+                        "classSource": "",
+                        "userNonRemovable": false,
+                        "customAttributes": {},
+                        "customAttributesLocked": false,
+                        "customTag": "",
+                        "createdBy": "",
+                        "changes": [],
+                        "changeFlags": {
+                            "loseDexToAC": false,
+                            "noStr": false,
+                            "noDex": false,
+                            "noInt": false,
+                            "noCon": false,
+                            "oneInt": false,
+                            "oneWis": false,
+                            "oneCha": false,
+                            "noEncumbrance": false,
+                            "mediumArmorFullSpeed": false,
+                            "heavyArmorFullSpeed": false,
+                            "multiAttack": false,
+                            "multiweaponAttack": false
+                        },
+                        "conditionFlags": {
+                            "dazzled": false,
+                            "wildshaped": false,
+                            "polymorphed": false
+                        },
+                        "combatChanges": [],
+                        "combatChangesRange": {
+                            "maxFormula": "",
+                            "max": 0
+                        },
+                        "combatChangesAdditionalRanges": {
+                            "hasAdditionalRanges": false,
+                            "slider1": {
+                                "maxFormula": "",
+                                "max": 0,
+                                "name": ""
+                            },
+                            "slider2": {
+                                "maxFormula": "",
+                                "max": 0,
+                                "name": ""
+                            },
+                            "slider3": {
+                                "maxFormula": "",
+                                "max": 0,
+                                "name": ""
+                            }
+                        },
+                        "combatChangesUsesCost": "chargesPerUse",
+                        "combatChangesApplySpecialActionsOnce": true,
+                        "combatChangeCustomDisplayName": "",
+                        "combatChangeCustomReferenceName": "",
+                        "sizeOverride": "",
+                        "counterName": "",
+                        "resistances": [],
+                        "damageReduction": [],
+                        "requirements": "",
+                        "creationChanges": [],
+                        "contextNotes": [],
+                        "activation": {
+                            "cost": 1,
+                            "type": ""
+                        },
+                        "duration": {
+                            "value": null,
+                            "units": ""
+                        },
+                        "target": {
+                            "value": ""
+                        },
+                        "range": {
+                            "value": null,
+                            "units": "",
+                            "long": null
+                        },
+                        "recharge": {
+                            "enabled": false,
+                            "formula": "",
+                            "current": 0
+                        },
+                        "uses": {
+                            "value": 0,
+                            "max": 0,
+                            "per": null,
+                            "autoDeductCharges": true,
+                            "allowMultipleUses": false,
+                            "chargesPerUse": 1,
+                            "maxPerUse": null,
+                            "maxPerUseFormula": "",
+                            "maxFormula": "",
+                            "rechargeFormula": null,
+                            "isResource": false,
+                            "canBeLinked": false
+                        },
+                        "requiresPsionicFocus": false,
+                        "linkedChargeItem": {
+                            "id": null,
+                            "img": null,
+                            "name": null
+                        },
+                        "measureTemplate": {
+                            "type": "",
+                            "size": 0,
+                            "overrideColor": false,
+                            "customColor": "",
+                            "overrideTexture": false,
+                            "customTexture": ""
+                        },
+                        "actionType": "",
+                        "attackBonus": "",
+                        "critConfirmBonus": "",
+                        "damage": {
+                            "parts": [],
+                            "alternativeParts": []
+                        },
+                        "summon": [],
+                        "attackParts": [],
+                        "autoscaleAttackParts": "",
+                        "formula": "",
+                        "attackCountFormula": "",
+                        "maxDamageDice": 0,
+                        "maxDamageDiceFormula": "",
+                        "ability": {
+                            "attack": null,
+                            "damage": null,
+                            "damageMult": 1,
+                            "critRange": 20,
+                            "critMult": 2,
+                            "twoHandedOnly": false,
+                            "vsTouchAc": false
+                        },
+                        "save": {
+                            "dc": 0,
+                            "description": "",
+                            "ability": "",
+                            "type": "",
+                            "dcAutoType": "",
+                            "dcAutoAbility": "",
+                            "originVersion": 97
+                        },
+                        "baseCl": "0",
+                        "sr": false,
+                        "pr": false,
+                        "metamagicFeats": {
+                            "maximized": false,
+                            "empowered": false,
+                            "enlarged": false,
+                            "intensified": false,
+                            "enhanced": false,
+                            "enhancedHalf": false,
+                            "widened": false
+                        },
+                        "effectNotes": "",
+                        "attackNotes": "",
+                        "specialActions": [],
+                        "favorite": false,
+                        "rollTableDraw": {
+                            "formula": "",
+                            "name": "",
+                            "pack": "",
+                            "id": ""
+                        },
+                        "enhancementType": "weapon",
+                        "properties": {},
+                        "nameExtension": {
+                            "prefix": "",
+                            "suffix": ""
+                        },
+                        "enh": 1,
+                        "enhIsLevel": false,
+                        "enhIncreaseFormula": "@enhancement",
+                        "priceFormula": "",
+                        "price": 0,
+                        "enhIncrease": 1,
+                        "isFromSpell": false,
+                        "isFromBuff": false,
+                        "weaponData": {
+                            "damageRoll": "",
+                            "damageType": "",
+                            "damageTypeId": "",
+                            "attackRoll": "",
+                            "optionalDamage": false,
+                            "alignment": {
+                                "good": false,
+                                "evil": false,
+                                "lawful": false,
+                                "chaotic": false
+                            }
+                        },
+                        "weaponAttackNotes": [],
+                        "allowedTypes": [],
+                        "attack": {
+                            "parts": []
+                        },
+                        "index": {
+                            "subType": null,
+                            "uniqueId": ""
+                        }
+                    },
+                    "ownership": {
+                        "default": 0,
+                        "wbFPpmVfPG23MbMC": 3
+                    },
+                    "_stats": {
+                        "systemId": "D35E",
+                        "systemVersion": "2.3.2",
+                        "coreVersion": "11.308",
+                        "createdTime": null,
+                        "modifiedTime": 1701526469560,
+                        "lastModifiedBy": "AhPhOo1awIE5mo3t"
+                    },
+                    "id": "SAC1HJjDnBZBQ4L8-Ng5AlRupmkMOgqQi"
+                }
+            ]
+        },
+        "light": {
+            "color": "#000000",
+            "radius": 0,
+            "opacity": 0,
+            "alpha": 0.5,
+            "lightAngle": 360,
+            "type": "",
+            "animationSpeed": 6,
+            "animationIntensity": 6,
+            "dimRadius": null,
+            "emitLight": false
+        },
+        "material": {
+            "data": null
+        },
+        "equipped": true,
+        "masterwork": true,
+        "weaponType": "martial",
+        "weaponSubtype": "ranged",
+        "weaponBaseType": "",
+        "properties": {
+            "blc": false,
+            "brc": false,
+            "dbl": false,
+            "dis": false,
+            "fin": false,
+            "frg": false,
+            "imp": false,
+            "mnk": false,
+            "nnl": false,
+            "prf": false,
+            "rch": false,
+            "thr": false,
+            "trp": false,
+            "grp": false,
+            "snd": false,
+            "ret": false,
+            "inc": false
+        },
+        "linkedItems": [],
+        "enh": 1,
+        "melded": false,
+        "weaponData": {
+            "damageRoll": "1d8",
+            "damageType": "P",
+            "damageTypeId": "",
+            "critRange": "19",
+            "critMult": "3",
+            "range": 110,
+            "attackFormula": "min(@abilities.str.mod - 3,0)+1",
+            "damageFormula": "min(@abilities.str.mod,3)+1",
+            "size": "med",
+            "alignment": {
+                "good": false,
+                "evil": false,
+                "lawful": false,
+                "chaotic": false
+            }
+        },
+        "attackNotes": "",
+        "effectNotes": "",
+        "bonus": {
+            "value": 0,
+            "_deprecated": true
+        },
+        "damageType": {
+            "value": "",
+            "_deprecated": true
+        },
+        "damage2": {
+            "value": "",
+            "_deprecated": true
+        },
+        "damage2Type": {
+            "value": "",
+            "_deprecated": true
+        },
+        "damage": {
+            "parts": [],
+            "alternativeParts": []
+        },
+        "convertedWeight": 3,
+        "selectedMaterial": "none",
+        "attackParts": [],
+        "conditionals": [],
+        "specialActions": [],
+        "activateActions": [],
+        "deactivateActions": [],
+        "perRoundActions": [],
+        "index": {
+            "uniqueId": "",
+            "subType": "martial"
+        },
+        "baseWeaponType": "Composite Longbow (+3)",
+        "summon": []
+    },
+    "folder": null,
+    "sort": 0,
+    "ownership": {
+        "default": 0,
+        "AhPhOo1awIE5mo3t": 3
+    },
+    "flags": {
+        "core": {},
+        "scene-packer": {
+            "sourceId": "Item.SAC1HJjDnBZBQ4L8",
+            "hash": "34af91581af2fa101294746e26fd9df916a94ed8"
+        }
+    },
+    "_stats": {
+        "systemId": "D35E",
+        "systemVersion": "2.3.2",
+        "coreVersion": "11.308",
+        "createdTime": 1689623851448,
+        "modifiedTime": 1728239144659,
+        "lastModifiedBy": "AhPhOo1awIE5mo3t"
+    },
+    "_id": "p1ZAXCwi0JLoyUN2",
+    "effects": []
+}
