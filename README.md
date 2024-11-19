@@ -60,7 +60,10 @@ The Journal Session Manager is a comprehensive application for organizing and tr
      
 4. **Setup the dataBase**
    ```bash
-   Get-Content .\db\schema.sql | sqlite3 .\db\journal.db  
+   # windows
+   Get-Content .\db\schema.sql | sqlite3 .\db\journal.db
+   # linux
+   sqlite3 ./db/journal.db < ./db/schema.sql
    ```
   
 5. **Run the Application**  
