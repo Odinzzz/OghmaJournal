@@ -1,4 +1,7 @@
 
+from os import path
+
+
 class config():
     
 
@@ -6,6 +9,9 @@ class config():
     DATA_FOLDER = "sessions"
     REFERENCE_FOLDER = "reference"
     DEBUG_FOLDER = "Debug"
+    DB = path.join('db','journal.db')
+
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB}"
 
 
 

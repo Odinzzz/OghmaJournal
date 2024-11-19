@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block additional_scripts %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+{% endblock %}
+
+{% block title %}Draft {% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <!-- Date Selector -->
+        <div class="col-2">
+            <h2>{{ dnd_session.id }}</h2>
+        </div>
+
+        <div class="col-12">
+            <div data-session-id="{{dnd_session.id}}" id="editor"></div>
+            <!-- Save/Not Save widget -->
+            <div id="save_widget" class="text-center mt-2">
+                <button id="save_btn" class="btn btn-secondary" disabled>Not Saved</button>
+                <button id="process_btn" type="button" class="btn btn-primary">Process</button>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+{% endblock %}
+{% block script %}
+<script src="{{ url_for('static', filename='quill.js') }}"></script>
+{% endblock %}
