@@ -43,7 +43,7 @@ The Journal Session Manager is a comprehensive application for organizing and tr
 ### Steps
 1. **Clone the Repository**  
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Odinzzz/OghmaJournal.git
    cd <repository-folder>
    ```
 
