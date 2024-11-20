@@ -3,7 +3,7 @@ import re
 
 
 
-from flask import Flask, jsonify,render_template, request, abort
+from flask import Flask, jsonify,render_template, request, abort, session
 from cs50.sql import SQL
 
 
@@ -17,6 +17,7 @@ app = Flask(__name__)
 
 db = SQL(config.SQLALCHEMY_DATABASE_URI)
 
+# Routes
 
 
 @app.route("/get_sessions", methods=['POST'])
@@ -258,31 +259,31 @@ def db_add_character():
 
 @app.route("/db/add_tag", methods=["POST"])
 def db_add_tag():
-    """
-    data = {
-        tag: NN must be @JournalEntry[foundry_name]{alias}
-        tag_type: NN location, character, faction, item, ...
-    }
-    """
-    data: dict = request.json
+    data = request.json
+    return jsonify(add_tag(data.get('tag'), data.get('tag_type')))
 
-    tag = data.get('tag')
-    tag_type = data.get('tag_type')
 
-    if not tag_type or not tag:
-        return jsonify({'error': 'Fail to create Tag: {tag_type} and {tag} cannot be Null'})
-    
+
+# Functions
+
+
+def add_tag(tag: str, tag_type: str):
+    """
+    Shared function to handle tag creation logic.
+    """
+    if not tag or not tag_type:
+        return {'error': 'Fail to create Tag: tag and tag_Type cannot be Null'}
+
+    # Validate tag format
     pattern = r'@JournalEntry\[[^\[\]{}]+\]\{[^\[\]{}]+\}'
-    tag_check = re.fullmatch(pattern, tag)
+    if not re.fullmatch(pattern, tag):
+        return {'error': 'Fail to create Tag: Invalid tag format'}
 
-    if not tag_check:
-        return jsonify({'error': 'Fail to create Tag: {tag} must be formated like @JournalEntry[foundry_name]{alias}'})
-    
+    # Check if tag exists
+    if db.execute('SELECT * FROM tags WHERE tag = ?;', tag):
+        return {'error': f"Fail to create Tag: {tag} already exists"}
+
+    # Insert tag
     tag_id = str(uuid.uuid4())
-    db.execute("INSERT INTO tags (id, tag, tag_type) VALUES (?, ?, ?);", tag_id, data['tag'], 'character'  )
-
-    return jsonify({
-        'id': tag_id,
-        'tag': tag,
-        'tag_type': tag_type
-    })
+    db.execute("INSERT INTO tags (id, tag, tag_type) VALUES (?, ?, ?);", tag_id, tag, tag_type)
+    return {'id': tag_id, 'tag': tag, 'tag_type': tag_type}
