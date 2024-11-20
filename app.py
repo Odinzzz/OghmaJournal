@@ -1,13 +1,9 @@
-
-import html
-import json
-import os
-from time import sleep, time
 import uuid
+import re
 
 
 
-from flask import Flask, jsonify, redirect,render_template, request, session, abort
+from flask import Flask, jsonify,render_template, request, abort
 from cs50.sql import SQL
 
 
@@ -32,7 +28,12 @@ def get_sessions():
 
 
 @app.route("/get_html", methods=['POST'])
-def get_html():
+def get_html() -> dict:
+    """retrieve the draft text
+
+    Returns:
+        dict: {'success': bool, 'html_content': html}
+    """
 
     data = request.json
 
@@ -56,14 +57,7 @@ def save_draft():
 
 @app.route("/")
 def home():
-    return redirect("/log_journal")
-
-
-@app.route("/log_journal")
-def log_journal():
-    
-
-    return render_template("log_journal.html")
+    return render_template("layout.html")
 
 
 @app.route("/new_session", methods=["POST"])
@@ -103,14 +97,8 @@ def edit_session(session_id):
         abort(400, 'Record not found')
 
 
-@app.route("/get_journal")
-def get_journal():
-
-    return jsonify({'JOURNAL':"bob"})
-
-
 @app.route("/process_draft", methods=["POST"])  # Use methods argument for HTTP methods
-def process_resume():
+def process_draft():
 
     # Access JSON data sent in the request body
     data: dict = request.json
@@ -147,14 +135,14 @@ def process_resume():
     """)
 
     # Build a dictionary for quick lookups
-    location_dict = {loc['location_name'].lower(): {'id': loc['location_id'], 'tag': loc['tag_name']} for loc in all_locations}
+    location_dict = {loc['location_name']: {'id': loc['location_id'], 'tag': loc['tag_name']} for loc in all_locations}
 
     
 
     for location in process_content:
 
         for location_index, location_name in enumerate(location):
-            location_id = location_dict.get(location_name.lower())
+            location_id = location_dict.get(location_name)
 
             if not location_id: # check with ai if there is a typo or not
 
@@ -168,10 +156,10 @@ def process_resume():
                 if check['exist'] == False: # No Typo new entry
 
                     tag_id = str(uuid.uuid4())
-                    tag = db.execute("INSERT INTO tags (id, tag) VALUES (?, ?);",tag_id, check["foundry_tag"])
+                    tag = db.execute("INSERT INTO tags (id, tag, tag_type) VALUES (?, ?, ?);",tag_id, check["foundry_tag"], 'location')
                     location_id = str(uuid.uuid4())
                     location_db = db.execute("INSERT INTO locations (id, name, tag_id) VALUES (?, ?, ?);", location_id, check["name"], tag_id  )
-                    location_dict[check['name'].lower()] = {"id": location_id, 'tag': check["foundry_tag"]} 
+                    location_dict[check['name']] = {"id": location_id, 'tag': check["foundry_tag"]} 
 
                     if location_db:
 
@@ -184,14 +172,14 @@ def process_resume():
                 else: # Typo already exist in the database
                     check_name: str = check.get('name')
                     if not check_name:
-                        return {'error': 'ai fucked up'}                    
-                    location_id = db.execute("SELECT id FROM locations WHERE name = ?", check_name.lower() )
+                        return jsonify({'error': 'ai messed up'})                   
+                    location_id = db.execute("SELECT id FROM locations WHERE name = ?", check_name )
                     if not location_id:
                         return jsonify({"error": "fail to retrieve database entry"})
-                    location_id = location_id[0]['id'] # make sure that location id is a string
+                    location_id = location_id['0']['id'] # make sure that location id is a string
             else:
 
-                location_id = location_id[0]['id']
+                location_id = location_id['id'] # make sure that location id is a string 
 
 
             db.execute("INSERT INTO sessionlocations (session_id, location_id, crono_index) VALUES (?, ?, ?);", session_id, location_id , int(location_index))
@@ -211,3 +199,90 @@ def process_resume():
     return jsonify({"session": session_id})
 
     
+@app.route("/db/add_character", methods=["POST"])
+def db_add_character():
+    """
+    data = {
+        name: NN foundry_name Case sensitive
+        classe:
+        char_type:
+        tag: NN must be @JournalEntry[foundry_name]{alias}
+    }
+    """
+    # parse the data for easier validation
+    data:dict =  request.json
+    name = data.get('name')
+    classe = data.get('classe')
+    char_type = data.get('type')
+    tag = data.get('tag')
+
+    # data validation
+    if not name or not tag:
+        return jsonify({'error': 'Fail to create character: Name and Tag cannot be Null'})
+    
+    pattern = r'@JournalEntry\[[^\[\]{}]+\]\{[^\[\]{}]+\}'
+    tag_check = re.fullmatch(pattern, tag)
+
+    if not tag_check:
+        return jsonify({'error': 'Fail to create character: Tag must be formated like @JournalEntry[foundry_name]{alias}'})
+
+    if not classe:
+        classe = ""
+    if not char_type:
+        char_type = ""
+
+    tag_check = db.execute('SELECT * FROM tags WHERE tag = ?;', tag)
+    if tag_check:
+        return jsonify({'error': 'Fail to create character: Tag already exist'})
+    
+    character_check = db.execute('SELECT * FROM characters WHERE name = ?;', name)
+    if character_check:
+        return jsonify({'error': 'Fail to create character: Character already exist'})
+    
+    # dataBase entry creation
+    character_id = str(uuid.uuid4())
+    tag_id = str(uuid.uuid4())
+    
+    db.execute("INSERT INTO tags (id, tag, tag_type) VALUES (?, ?, ?);", tag_id, data['tag'], 'character'  )
+    db.execute("INSERT INTO characters (id, name, classe, type, tag_id) VALUE (?, ?, ?, ?, ?);", character_id, name, classe, char_type, tag_id)
+
+    return jsonify({
+        'id': character_id,
+        'name': name,
+        'classe': classe,
+        'char_type': char_type,
+        'tag': tag,
+        'tag_id': tag_id
+        })
+
+
+@app.route("/db/add_tag", methods=["POST"])
+def db_add_tag():
+    """
+    data = {
+        tag: NN must be @JournalEntry[foundry_name]{alias}
+        tag_type: NN location, character, faction, item, ...
+    }
+    """
+    data: dict = request.json
+
+    tag = data.get('tag')
+    tag_type = data.get('tag_type')
+
+    if not tag_type or not tag:
+        return jsonify({'error': 'Fail to create Tag: {tag_type} and {tag} cannot be Null'})
+    
+    pattern = r'@JournalEntry\[[^\[\]{}]+\]\{[^\[\]{}]+\}'
+    tag_check = re.fullmatch(pattern, tag)
+
+    if not tag_check:
+        return jsonify({'error': 'Fail to create Tag: {tag} must be formated like @JournalEntry[foundry_name]{alias}'})
+    
+    tag_id = str(uuid.uuid4())
+    db.execute("INSERT INTO tags (id, tag, tag_type) VALUES (?, ?, ?);", tag_id, data['tag'], 'character'  )
+
+    return jsonify({
+        'id': tag_id,
+        'tag': tag,
+        'tag_type': tag_type
+    })
