@@ -247,7 +247,8 @@ def tag_description(entry_id):
     except Exception as e:
         return jsonify({"success": False, "error": f"OpenAI Error: {e}"}), 500
     
-    return jsonify(update_entry("tagged_description", tagged_description['tagged_string'], entry_id))
+    response, code = update_entry("tagged_description", tagged_description['tagged_string'], entry_id)
+    return jsonify(response), code
 
 
 @app.route("/tool/ai/correct_string", methods=['POST'])

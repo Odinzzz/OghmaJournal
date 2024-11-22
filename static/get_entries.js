@@ -237,7 +237,7 @@ function entry_container(entry) {
                 <button class="btn  tag-btn fs-6  m-0 mb-1 p-0"  aria-label="tag" data-entry-id="${entry.entry_id}">🏷️</button>
                 </div>
                 <div class="col-10 p-0 m-0" >
-                    <small class="text-body-secondary" class="tag_description_holder" id="tagged_description_holder_${entry.entry_id}">With faded secondary text</small>
+                    <small class="text-body-secondary" class="tag_description_holder" id="tagged_description_holder_${entry.entry_id}">${entry.entry_tagged}</small>
                 </div>
                 <div class="col-1 position-relative">
                     <button class="btn del-btn fs-6 m-0 p-0 position-absolute top-0 end-0" style="right: 20px !important;" aria-label="delete" data-entry-id="${entry.entry_id}">🗑️</button>
