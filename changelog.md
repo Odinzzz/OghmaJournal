@@ -1,5 +1,7 @@
-#### Hotfix: 00.00.01.1 - tagged_string
--**fix**: a bug where tag tagged string doen show up when edit_entry is loaded
+### Hotfix: 00.00.01.1 - tagged_string
+
+#### **Web App**
+- **fix**: a bug where tag tagged string doen show up when edit_entry is loaded
 
 
 ### Changelog: 00.00.01.0 – The Emoji Update 🎉✨
