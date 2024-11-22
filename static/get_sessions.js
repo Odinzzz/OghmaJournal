@@ -12,10 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
             // Loop through the sessions and create a button for each session
             data.sessions.forEach(session => {
                 const newListItem = document.createElement("li");
-                newListItem.classList.add("list-group-item");
+                newListItem.classList.add("nav-item");
 
                 newListItem.innerHTML = `
-                    <button data-session-id="${session.id}" class="btn btn-primary w-100" onclick="edit_session('${session.id}')">
+                    <button data-session-id="${session.id}" class="nav-link" onclick="edit_session('${session.id}')">
                         ${session.id}
                     </button>
                 `;

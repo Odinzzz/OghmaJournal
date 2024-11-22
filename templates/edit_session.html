@@ -7,23 +7,21 @@
 {% block title %}edit session{% endblock %}
 
 {% block body %}
-<h2>{{ dnd_session.id }}</h2>
-<textarea rows="1" id="session_title"></textarea>
+<h2 id="session_id">{{ dnd_session.id }}</h2>
+<button id="tagall" class="btn btn-primary">Tag All</button>
 
-<h3>Location:</h3>
-
-<h3>Hero Involved</h3>
-
-<h3>encouter:</h3>
-<h4>location:</h4>
 
 <h3>events</h3>
+<div id="entries_container" class="container">
+
+</div>
 <h2>location:</h2>
 <textarea></textarea>
 
 <h3>Conclusion</h3>
 <h3>Key events</h3>
+<button id="process_journal_button">Process</button>
 {% endblock %}
 {% block script %}
-
+<script src="{{ url_for('static', filename='get_entries.js' ) }}"></script>
 {% endblock %}

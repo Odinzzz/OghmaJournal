@@ -50,7 +50,7 @@ class TestAddCharacter(unittest.TestCase):
         """Test adding a character with missing required fields."""
         data = {"classe": "Warrior", "type": "NPC"}  # Missing 'name' and 'tag'
         response = self.app.post("/db/add_character", json=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.data)
         self.assertIn("error", response_data)
         self.assertEqual(response_data["error"], "Fail to create character: Name and Tag cannot be Null")
@@ -64,7 +64,7 @@ class TestAddCharacter(unittest.TestCase):
             "tag": "InvalidTagFormat"
         }
         response = self.app.post("/db/add_character", json=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.data)
         self.assertIn("error", response_data)
         self.assertEqual(response_data["error"], "Fail to create character: Tag must be formated like @JournalEntry[foundry_name]{alias}")
@@ -78,7 +78,7 @@ class TestAddCharacter(unittest.TestCase):
             "tag": "@JournalEntry[existing]{tag}"
         }
         response = self.app.post("/db/add_character", json=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.data)
         self.assertIn("error", response_data)
         self.assertEqual(response_data["error"], "Fail to create character: Tag already exist")
@@ -92,7 +92,7 @@ class TestAddCharacter(unittest.TestCase):
             "tag": "@JournalEntry[NewFoundry]{Alias}"
         }
         response = self.app.post("/db/add_character", json=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.data)
         self.assertIn("error", response_data)
         self.assertEqual(response_data["error"], "Fail to create character: Character already exist")

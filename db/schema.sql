@@ -51,6 +51,7 @@ CREATE TABLE encounters (
 -- Table: entries
 CREATE TABLE entries (
     id TEXT PRIMARY KEY NOT NULL, -- Unique and cannot be null
+    title TEXT,
     description TEXT,
     tagged_description TEXT,
     session_id TEXT NOT NULL, -- Link to sessions.id

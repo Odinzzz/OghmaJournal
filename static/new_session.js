@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Disable the button
         new_session_button.disabled = true;
 
+        session_list = document.getElementById('sessions_list');
+
         // Create the popup window
         const popup = document.createElement("div");
         popup.classList.add("popup");
@@ -16,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div id="error_message" class="error-message" style="display: none;"></div>
             </div>
         `;
-        document.body.appendChild(popup);
+        session_list.appendChild(popup);
 
         const sendButton = document.getElementById("send_session");
         const cancelButton = document.getElementById("cancel_session");
@@ -25,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         cancelButton.addEventListener("click", () => {
             // Close the popup
-            document.body.removeChild(popup);
+            session_list.removeChild(popup);
             new_session_button.disabled = false;
         });
 
@@ -46,14 +48,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     errorMessage.style.display = 'block';
                     sessionIdInput.value = ''; // Clear input
                 } else {
+                    const session_list = document.getElementById("sessions_list");
                     // Process successful response
                     const newSessionId = data.content;
                     // Close the popup
-                    document.body.removeChild(popup);
+                    session_list.removeChild(popup);
                     new_session_button.disabled = false;
 
                     // Add the new session button to the list
-                    const sessionList = document.getElementById("sessions_list");
+                    
                     const newListItem = document.createElement("li");
                     newListItem.classList.add("list-group-item");
                     newListItem.innerHTML = `
@@ -61,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             ${newSessionId}
                         </button>
                     `;
-                    sessionList.insertBefore(newListItem, sessionList.lastElementChild); // Add before the last item
+                    session_list.insertBefore(newListItem, session_list.lastElementChild); // Add before the last item
                 }
             })
             .catch(err => {

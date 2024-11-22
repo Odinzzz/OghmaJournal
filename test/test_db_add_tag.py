@@ -53,7 +53,7 @@ class TestAddTag(unittest.TestCase):
         """Test adding a tag with missing required fields."""
         data = {"tag": "@JournalEntry[Foundry]{Alias}"}  # Missing 'tag_type'
         response = self.app.post("/db/add_tag", json=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.data)
         self.assertIn("error", response_data)
         self.assertEqual(response_data["error"], 'Fail to create Tag: tag and tag_Type cannot be Null')
@@ -65,7 +65,7 @@ class TestAddTag(unittest.TestCase):
             "tag_type": "character"
         }
         response = self.app.post("/db/add_tag", json=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.data)
         self.assertIn("error", response_data)
         self.assertEqual(response_data["error"], "Fail to create Tag: Invalid tag format")
@@ -76,7 +76,7 @@ class TestAddTag(unittest.TestCase):
             "tag_type": "character"
         }  # Missing 'tag'
         response = self.app.post("/db/add_tag", json=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.data)
         self.assertIn("error", response_data)
         self.assertEqual(response_data["error"], "Fail to create Tag: tag and tag_Type cannot be Null")
@@ -97,7 +97,7 @@ class TestAddTag(unittest.TestCase):
             "tag_type": existing_tag["tag_type"]
         }
         response = self.app.post("/db/add_tag", json=data)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         response_data = json.loads(response.data)
         self.assertIn("error", response_data)
         self.assertEqual(response_data["error"], f"Fail to create Tag: {data['tag']} already exists")

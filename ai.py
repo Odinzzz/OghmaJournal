@@ -7,6 +7,12 @@ class SearchResponse(BaseModel):
     name: str
     foundry_tag: str
 
+class Correction(BaseModel):
+    success: bool
+    original: str
+    french: str
+    english: str
+
 
 
 
@@ -32,6 +38,30 @@ def ai_check(string, object, client=OpenAI()) -> dict:
         ],
         
         response_format=SearchResponse
+    )
+
+    return json.loads(response.choices[0].message.content)
+
+def ai_corrector(string, client=OpenAI()) -> dict:
+    """
+    docstring
+    """
+
+    
+    response = client.beta.chat.completions.parse(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": "I am a corrector. Provide user input in French or English, and I will correct all grammatical, lexical, and typographical errors. I can also rephrase for better structure. I will output a response like this: {original: '', french: '', english: ''}."
+            },
+            {
+                'role': 'user',
+                'content': string
+            },
+        ],
+        
+        response_format=Correction
     )
 
     return json.loads(response.choices[0].message.content)
