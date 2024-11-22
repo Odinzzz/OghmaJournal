@@ -3,8 +3,7 @@ __pycache__/
 *.pyc
 sessions/
 0-archive/
-Debug/
 reference/
-inventory/
 01-ToActivate.txt
 db/journal.db
+TODO.md
