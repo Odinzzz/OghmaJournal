@@ -87,11 +87,11 @@ def tagging(content, debug=False):
         results.append(responseJson)
 
         # log file for debug
-        if debug:
-            file_name = f'test{i}.json'
-            file_path = os.path.join(config.DEBUG_FOLDER, 'json_files', file_name)
-            with open(file_path, "w", encoding="utf-8") as file:
-                json.dump(responseJson, file, indent=4)
+        # if debug:
+        #     file_name = f'test{i}.json'
+        #     file_path = os.path.join(config.DEBUG_FOLDER, 'json_files', file_name)
+        #     with open(file_path, "w", encoding="utf-8") as file:
+        #         json.dump(responseJson, file, indent=4)
 
 
     # base score on similarity

@@ -1,11 +1,11 @@
 {% extends 'layout.html' %}
 
-{% block additional_scripts %}
-<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-{% endblock %}
 
 {% block title %}Draft {% endblock %}
+{% block head %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+
+{% endblock %}
 
 {% block body %}
 <div class="container">
@@ -29,5 +29,6 @@
 </div>
 {% endblock %}
 {% block script %}
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script src="{{ url_for('static', filename='quill.js') }}"></script>
 {% endblock %}

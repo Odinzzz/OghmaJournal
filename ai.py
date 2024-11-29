@@ -47,24 +47,29 @@ def ai_corrector(string, client=OpenAI()) -> dict:
     docstring
     """
 
-    
-    response = client.beta.chat.completions.parse(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "system",
-                "content": "I am a corrector. Provide user input in French or English, and I will correct all grammatical, lexical, and typographical errors. I can also rephrase for better structure. I will output a response like this: {original: '', french: '', english: ''}."
-            },
-            {
-                'role': 'user',
-                'content': string
-            },
-        ],
-        
-        response_format=Correction
-    )
+    try:
+        response = client.beta.chat.completions.parse(
+            model="gpt-4o-mini",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "I am a corrector. Provide user input in French or English, and I will correct all grammatical, lexical, and typographical errors. I can also rephrase for better structure. I will output a response like this: {original: '', french: '', english: ''}."
+                },
+                {
+                    'role': 'user',
+                    'content': string
+                },
+            ],
+            
+            response_format=Correction
+        )
 
-    return json.loads(response.choices[0].message.content)
+        response_object = json.loads(response.choices[0].message.content)
+        print(f"DEBUG: response_object: {response_object}")
+        return response_object
+    except Exception as e:
+        print(f"DEBUG: ERROR: {e}")
+        return {"success": False, "error": e}
 
 
 if __name__ == "__main__":

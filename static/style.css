@@ -1,0 +1,24 @@
+
+.entry {
+    
+    overflow: hidden;
+    opacity: 1 ;
+    transform: scale(1) ;
+    transition: opacity 0.35s ease-in-out, transform 0.5s ease-in-out;
+}
+
+
+.entry.fade-out {
+    opacity: 0 !important;
+    transform: scale(0.9) !important;
+}
+.no-hover:hover {
+    background-color: #0d6dfc !important; /* Keeps the original background */
+    color: #fff5fe !important;           /* Keeps the original text color */
+    box-shadow: none !important;         /* Removes hover shadow effect */
+    cursor: default !important;  
+    border-color:  #0d6dfc !important;    /* Keeps the original border color */
+    
+}
+
+  

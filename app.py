@@ -3,7 +3,7 @@ import re
 
 
 
-from flask import Flask, jsonify,render_template, request, abort
+from flask import Flask, jsonify,render_template, request, abort, session
 from flask_cors import CORS
 
 from cs50.sql import SQL
@@ -13,6 +13,7 @@ from cs50.sql import SQL
 from config.config import config
 from scripts import summary
 from scripts.quill_processing import quill_processing
+from scripts.event_title import get_title
 from ai import ai_check, ai_corrector
 from scripts.tag import tagging
 
@@ -45,6 +46,96 @@ def get_sessions():
         return jsonify({"success": False, "error": f"DataBaseError: {e}"}), 500
 
     return jsonify({"sessions": sessions}),200
+
+
+@app.route("/get_entries/<int:session_id>")
+def get_entries(session_id):
+
+    try:
+        db_data = db.execute("""
+            SELECT 
+                sessions.title AS session_title,
+                sessions.summary AS session_summary,
+                locations.name AS location_name,
+                sessionlocations.crono_index AS location_index,
+                tags.tag AS location_tag,
+                tags.id AS tag_id,
+                entries.id AS entry_id,
+                entries.title AS entry_title,
+                entries.entry_index,
+                entries.description AS entry_description,
+                entries.tagged_description AS entry_tagged
+            FROM 
+                sessions
+            LEFT JOIN 
+                entries ON sessions.id = entries.session_id
+            LEFT JOIN 
+                locations ON entries.location_id = locations.id
+            LEFT JOIN 
+                tags ON locations.tag_id = tags.id
+            LEFT JOIN 
+                sessionlocations ON sessions.id = sessionlocations.session_id AND locations.id = sessionlocations.location_id
+            WHERE 
+                sessions.id = ?;
+            """, session_id)
+    except Exception as e:
+        return jsonify({"success": False, "error": f"DataBaseError: {e}"}), 500
+    
+    if not db_data:
+        return jsonify({"success": False, "error": 'session do not exist'})
+    
+    session_data= {"session_id": session_id}
+    session_data["session_title"] = db_data[0].get('session_title')
+    session_data['locations'] = {}
+
+    for data in db_data:
+        if data['location_index'] not in session_data['locations']:
+            session_data['locations'][data['location_index']] = {'location_name': data['location_name'], "entries": []}
+        
+        session_data['locations'][data['location_index']]['entries'].append({
+            "entry_id": data['entry_id'],
+            'entry_index': data['entry_index'],
+            'entry_title': data['entry_title'],
+            "entry_description": data["entry_description"],
+            "entry_tagged": data["entry_tagged"]
+        })
+
+    return jsonify(session_data), 200
+    
+
+@app.route("/get_characters")
+def get_characters():
+
+    try:
+        characters = db.execute("SELECT * FROM characters;")
+    except Exception as e:
+        return jsonify({"success": False, "error": f"DataBaseError: {e}"}), 500
+    
+    if not characters:
+        return jsonify({"success": False, "error": f"character found"}), 400
+    
+    return jsonify({"success": True, "content": characters}), 500
+
+
+@app.route("/get_heros/<session_id>")
+def get_heros(session_id):
+    try:
+        int(session_id)
+    except Exception as e:
+        return jsonify({"success": False, 'error': f'{session_id = } must be an integer'})
+    
+    try:
+        heros = db.execute("""
+            SELECT characters.id as character_id,
+            characters.name as character_name
+            FROM heros
+            JOIN characters ON heros.character_id = characters.id
+            WHERE heros.session_id = ?;""", session_id)
+    except Exception as e:
+        return jsonify({'success': False, 'error': 'Database error', 'details': str(e)}), 500
+    
+
+    return jsonify({'success': True, 'content': heros})
 
 
 @app.route("/get_html", methods=['POST'])
@@ -251,6 +342,24 @@ def tag_description(entry_id):
     return jsonify(response), code
 
 
+@app.route ("/tool/ai/generate_title/<entry_id>", methods=['PATCH'] )
+def generate_title(entry_id):
+    entry = db.execute("SELECT description FROM entries WHERE id= ?;", entry_id)
+
+    if not entry:
+        return jsonify({"success": False, "error": f"No entry with ID: {entry_id}"}), 400
+    
+    try:
+        print( f'({entry[0]}) is of type {type(entry[0])}')
+        generated_title = get_title(event=entry[0]['description'])
+    except Exception as e:
+        return jsonify({"success": False, "error": f"OpenAI Error: {e}"}), 500
+
+    print(f'{generated_title}: {type(generated_title)}')
+    response, code = update_entry("title", generated_title, entry_id)
+    return jsonify(response), code
+
+
 @app.route("/tool/ai/correct_string", methods=['POST'])
 def tool_correct_string():
 
@@ -259,6 +368,56 @@ def tool_correct_string():
 
     response, code = correct_string(string)
     return jsonify(response), code
+
+
+@app.route("/db/add_hero", methods=['POST'])
+def add_hero():
+    data: dict = request.json
+    print(request)
+    session_id = data.get('session_id')
+    character_id = data.get('character_id')
+    character_name = data.get('character_name')
+
+    print(f'{session_id = } {character_id = } {character_name = }')
+
+    if not session_id or not character_id or not character_name:
+        return jsonify({'success': False, 'error': f'No session_id: {session_id} or character_id: {character_id} or character_name: {character_name} provided '}),400
+    try:
+        new_hero = db.execute("INSERT INTO heros (session_id, character_id) VALUES (?, ?);", session_id, character_id)
+    except Exception as e:
+        return jsonify({"success": False, "error": f"DataBaseError: {e}"}), 500
+    
+    if new_hero:
+        return {'success': True, 'content': {
+            'session_id': session_id,
+            'character_id': character_id,
+            'character_name': character_name
+        }}
+
+    return jsonify({"success": False, "error": 'Something went wrong'}), 500
+
+
+@app.route("/db/remove_hero", methods=['DELETE'])
+def remove_hero():
+    data:dict = request.json
+    session_id = data.get('session_id')
+    character_id = data.get('character_id')
+
+    if not character_id or not session_id:
+        return jsonify({'success': False, 'error': f'{session_id = } and {character_id = } cannot be null'})
+    
+    try:
+        removed_hero = db.execute('DELETE FROM heros WHERE character_id = ? AND session_id = ?;', character_id, session_id)
+    except Exception as e:
+        return jsonify({"success": False, "error": f"DataBaseError: {e}"}), 500
+    
+    if removed_hero:
+        return {'success': True, 'content': {
+            'session_id': session_id,
+            'character_id': character_id,
+        }}
+
+    return jsonify({"success": False, "error": 'Something went wrong'}), 500
 
 
 @app.route("/db/add_character", methods=["POST"])
@@ -332,61 +491,6 @@ def db_add_tag():
     return jsonify(response), code
 
 
-@app.route("/get_entries/<int:session_id>")
-def get_entries(session_id):
-
-    try:
-        db_data = db.execute("""
-            SELECT 
-                sessions.title AS session_title,
-                sessions.summary AS session_summary,
-                locations.name AS location_name,
-                sessionlocations.crono_index AS location_index,
-                tags.tag AS location_tag,
-                tags.id AS tag_id,
-                entries.id AS entry_id,
-                entries.title AS entry_title,
-                entries.entry_index,
-                entries.description AS entry_description,
-                entries.tagged_description AS entry_tagged
-            FROM 
-                sessions
-            LEFT JOIN 
-                entries ON sessions.id = entries.session_id
-            LEFT JOIN 
-                locations ON entries.location_id = locations.id
-            LEFT JOIN 
-                tags ON locations.tag_id = tags.id
-            LEFT JOIN 
-                sessionlocations ON sessions.id = sessionlocations.session_id AND locations.id = sessionlocations.location_id
-            WHERE 
-                sessions.id = ?;
-            """, session_id)
-    except Exception as e:
-        return jsonify({"success": False, "error": f"DataBaseError: {e}"}), 500
-    
-    if not db_data:
-        return jsonify({"success": False, "error": 'session do not exist'})
-    
-    session_data= {"session_id": session_id}
-    session_data["session_title"] = db_data[0].get('session_title')
-    session_data['locations'] = {}
-
-    for data in db_data:
-        if data['location_index'] not in session_data['locations']:
-            session_data['locations'][data['location_index']] = {'location_name': data['location_name'], "entries": []}
-        
-        session_data['locations'][data['location_index']]['entries'].append({
-            "entry_id": data['entry_id'],
-            'entry_index': data['entry_index'],
-            'entry_title': data['entry_title'],
-            "entry_description": data["entry_description"],
-            "entry_tagged": data["entry_tagged"]
-        })
-
-    return jsonify(session_data), 200
-    
-
 @app.route("/db/update_entry/<field>/", methods=['POST'])
 def db_update_entry(field):
     data:dict  = request.json
@@ -397,7 +501,6 @@ def db_update_entry(field):
     return jsonify(response), code
 
     
-
 @app.route("/db/delete_entry/<entry_id>", methods=['DELETE'])
 def db_delete_entry(entry_id):
     deleted = db.execute('DELETE FROM entries WHERE id = ?;', entry_id)
@@ -432,6 +535,12 @@ def add_tag(tag: str, tag_type: str):
 
 
 def update_entry(field: str, value: str, entry_id: str):
+
+    if field == "entry_index":
+        try:
+            value = int(value)
+        except ValueError as e:
+            return {"success": False, "error": f"{value} is not an interger"}
     
     try:
         db.execute("""
@@ -443,7 +552,8 @@ def update_entry(field: str, value: str, entry_id: str):
     except Exception as e:
         return {"success": False, "error": f'DataBaseError: {e}'}, 500
 
-        
+    print(f'DEBUG: Entry {entry_id} as updated {field} to the value: {value}')
+
     return {"success": True, "content": value, "field": field}, 200
 
 
@@ -453,13 +563,27 @@ def correct_string(string):
         return {"success": False, 'error': 'no string provided'}, 400
     
     try:
-        correction =ai_corrector(string)
+        correction = ai_corrector(string)
     except Exception as e:
         return {"success": False, 'error': f'OpenAI ERROR: {e}'}, 500
     
     if not correction['success']:
         return {"success": False, 'error': 'unable to correct the string'}, 400
     
+    if correction[config.LANG] == "":
+        return {"success": False, "error": "Unexpected error OpenAi return an empty string"}
     return {'success': correction['success'], 'content': correction[config.LANG]}, 200
 
 
+def get_tags(type='all'):
+
+    if type == 'all':
+        
+        try:
+            tags = db.execute("SELECT * FROM tags;")            
+        except Exception as e:
+            return {"success": False, "error": f'DataBaseError: {e}'}, 500
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=(int('3000')), debug=True)
