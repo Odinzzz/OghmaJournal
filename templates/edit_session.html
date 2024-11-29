@@ -1,22 +1,73 @@
 {% extends 'layout.html' %}
 
-{% block additional_scripts %}
+
+{% block title %}edit session{% endblock %}
+{% block head %}
 
 {% endblock %}
 
-{% block title %}edit session{% endblock %}
-
 {% block body %}
-<h2 id="session_id">{{ dnd_session.id }}</h2>
-<button id="tagall" class="btn btn-primary">Tag All</button>
-
-
-<h3>events</h3>
-<div id="entries_container" class="container">
+<div class="row justify-content-end">
+    
+    <div class="col-6">
+        <h2 id="session_id" data-session-id="{{ dnd_session.id }}">{{ dnd_session.id }}</h2>
+    </div>
+    <div class="col-auto">
+        <button class="btn save-session-btn p-1 ">💾</button>
+        <button class="btn delete-session-btn p-1 ">🗑️</button>
+    </div>
 
 </div>
-<h2>location:</h2>
-<textarea></textarea>
+<button id="tagall" class="btn btn-primary">Tag All</button>
+
+<h3>Heros:</h3>
+<div>
+
+    
+    
+    <div class="row">
+        <div class="col-6">
+            <div id="heroContainer"  class="row">
+
+                <div id="heroDropDownContainer" class="col-auto mb-1">
+                    <div class="dropdown">
+                        <button 
+                        type="button" 
+                        class="btn btn-primary dropdown-toggle py-2" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false">
+                        Add Hero
+                        </button>
+                    
+                        <div class="dropdown-menu p-2" style="min-width: 300px;">
+                        <!-- Search Input -->
+                        <input 
+                            type="text" 
+                            class="form-control" 
+                            id="dropdownSearch" 
+                            placeholder="Type to search..."
+                        />
+                    
+                        <!-- List of Items -->
+                        <ul class="list-unstyled mt-2" id="heroDropdownList" style="max-height: 150px; overflow-y: auto;">
+                            <!-- add button there with get_entry.js -->
+                        </ul>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    </div>    
+</div>
+
+
+<h3>Events:</h3>
+
+<ul id="entries_container" class="container ">
+    <button class="btn btn-primary">New Location</button>
+</ul>
+
+
 
 <h3>Conclusion</h3>
 <h3>Key events</h3>

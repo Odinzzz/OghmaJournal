@@ -15,4 +15,4 @@ class config():
 
 
 
-    LANG = "english"
+    LANG = "french" # french or english lowercase

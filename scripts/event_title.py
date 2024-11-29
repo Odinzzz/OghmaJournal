@@ -12,7 +12,8 @@ from config.config import config
 class Title(BaseModel):
     event_title: str
 
-def get_title(client=OpenAI(),event=""):
+def get_title(client=OpenAI(),event="") -> str:
+
     if "" == event:
         raise ValueError
     
