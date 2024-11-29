@@ -3,10 +3,11 @@ import re
 
 
 
-from flask import Flask, jsonify,render_template, request, abort, session
+from flask import Flask, jsonify,render_template, request, abort
 from flask_cors import CORS
 
 from cs50.sql import SQL
+
 
 
 
@@ -583,6 +584,8 @@ def get_tags(type='all'):
             tags = db.execute("SELECT * FROM tags;")            
         except Exception as e:
             return {"success": False, "error": f'DataBaseError: {e}'}, 500
+        
+    return {'success': True, 'content': tags}, 200
 
 
 if __name__ == "__main__":

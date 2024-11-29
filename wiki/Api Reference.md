@@ -11,7 +11,12 @@
 - [Process Draft](#process-draft)
 - [Tag Entry Description](#tag-entry-description)
 - [Correct String](#correct-string)
+- [Generate Title for Entry](#generate-title-for-entry)
 - [Add Character to Database](#add-character-to-database)
+- [Retrieve All Character](#retrieve-all-characters)
+- [Add Hero to Session](#add-hero-to-session)
+- [Remove Hero from Session](#remove-hero-from-session)
+- [Retrieve Heroes for a Session](#retrieve-heroes-for-a-session)
 - [Add Tag to Database](#add-tag-to-database)
 - [Get Entries for Session](#get-entries-for-session)
 - [Update Entry Field](#update-entry-field)
@@ -253,6 +258,49 @@ Corrects and validates a given string through AI processing.
 - **Status Code**: `500` - Error during string correction.
 
 ---
+## Generate Title for Entry
+
+### Endpoint
+**Method**: `PATCH`  
+**URL**: `/tool/ai/generate_title/<entry_id>`
+
+### Description
+This endpoint uses AI to generate a title for an entry based on its description. The generated title is automatically saved in the database under the `title` field for the specified entry.
+
+### Parameters
+#### Path Parameters
+- **`entry_id`** *(int, required)*: The unique ID of the entry for which the title will be generated.
+
+### Responses
+#### Success Response
+- **Status Code**: `200` - Title successfully generated and updated in the entry.
+  - **Response Body**:
+    ```json
+    {
+      "success": true,
+      "content": "Generated Title"
+    }
+    ```
+
+#### Error Responses
+- **Status Code**: `400` - Entry not found in the database.
+  - **Response Body**:
+    ```json
+    {
+      "success": false,
+      "error": "No entry with ID: <entry_id>"
+    }
+    ```
+- **Status Code**: `500` - Internal server error during title generation or database update.
+  - **Response Body**:
+    ```json
+    {
+      "success": false,
+      "error": "OpenAI Error: <error_message>"
+    }
+    ```
+
+---
 
 ## Add Character to Database
 
@@ -292,6 +340,174 @@ Adds a fictional character entry to the database with relevant details.
 
 ---
 
+## Retrieve All Characters
+
+### Endpoint
+**Method**: `GET`  
+**URL**: `/get_characters`
+
+### Description
+This endpoint retrieves all characters from the database.
+
+### Parameters
+This endpoint does not require any path, query, or body parameters.
+
+### Responses
+#### Success Response
+- **Status Code**: `200` - Successfully retrieved a list of characters.
+  - **Response Body**:
+    ```json
+    {
+      "success": True,
+      "content": [
+        {"id": 1, "name": "Character Name", "description": "Character Description"},
+        {"id": 2, "name": "Another Character", "description": "Another Description"}
+      ]
+    }
+    ```
+
+#### Error Responses
+- **Status Code**: `400` - No characters found in the database.
+  - **Response Body**:
+    ```json
+    {
+      "success": False,
+      "error": "No characters found"
+    }
+    ```
+- **Status Code**: `500` - Internal Server Error due to database querying issues.
+  - **Response Body**:
+    ```json
+    {
+      "success": False,
+      "error": "DataBaseError: [Error Message]"
+    }
+    ```
+
+---
+## Add Hero to Session
+
+### Endpoint
+**Method**: `POST`  
+**URL**: `/db/add_hero`
+
+### Description
+This endpoint adds a new hero to a specific session by associating a character ID and character name with a session ID.
+
+### Parameters
+#### Request Body Parameters
+- **`session_id`** *(string, required)*: The session ID to which the hero will be added.
+- **`character_id`** *(string, required)*: The ID of the character to be added as a hero.
+- **`character_name`** *(string, required)*: The name of the character to be added as a hero.
+
+### Responses
+#### Success Response
+- **Status Code**: `200` - Hero successfully added to the session.
+  - **Response Body**:
+    ```json
+    {
+      "success": true,
+      "content": {
+        "session_id": "20230101",
+        "character_id": "12345",
+        "character_name": "Hero Name"
+      }
+    }
+    ```
+
+#### Error Responses
+- **Status Code**: `400` - Missing `session_id`, `character_id`, or `character_name` in the request body.
+- **Status Code**: `500` - Internal Server Error due to database issues or other errors.
+
+---
+## Remove Hero from Session
+
+### Endpoint
+**Method**: `DELETE`  
+**URL**: `/db/remove_hero`
+
+### Description
+This endpoint removes a hero from a specified session by character ID.
+
+### Parameters
+#### Request Body Parameters
+- **`session_id`** *(string, required)*: The session ID associated with the hero to be removed.
+- **`character_id`** *(string, required)*: The character ID of the hero to be removed from the session.
+
+### Responses
+#### Success Response
+- **Status Code**: `200` - Hero successfully removed from the session.
+  - **Response Body**:
+    ```json
+    {
+      "success": True,
+      "content": {
+        "session_id": "20230101",
+        "character_id": "abc123"
+      }
+    }
+    ```
+
+#### Error Responses
+- **Status Code**: `400` - Missing `session_id` or `character_id` in the request.
+- **Status Code**: `500` - Database error or internal issue while attempting to remove the hero.
+
+---
+## Retrieve Heroes for a Session
+
+### Endpoint
+**Method**: `GET`  
+**URL**: `/get_heros/<session_id>`
+
+### Description
+Retrieve a list of heroes associated with a specific session ID. Each hero includes their ID and name.
+
+### Parameters
+#### Path Parameters
+- **`session_id`** *(integer, required)*: The ID of the session for which to retrieve heroes.
+
+### Responses
+#### Success Response
+- **Status Code**: `200` - Successfully retrieved heroes for the specified session.
+  - **Response Body**:
+    ```json
+    {
+      "success": True,
+      "content": [
+        {
+          "character_id": 1,
+          "character_name": "Hero Name 1"
+        },
+        {
+          "character_id": 2,
+          "character_name": "Hero Name 2"
+        }
+      ]
+    }
+    ```
+
+#### Error Responses
+- **Status Code**: `400` - `session_id` must be an integer.
+  - **Response Body**:
+    ```json
+    {
+      "success": False,
+      "error": "session_id = 'abc' must be an integer"
+    }
+    ```
+- **Status Code**: `500` - Database error while querying heroes.
+  - **Response Body**:
+    ```json
+    {
+      "success": False,
+      "error": "Database error",
+      "details": "Error details"
+    }
+    ```
+
+
+
+---
 ## Add Tag to Database
 
 ### Endpoint
