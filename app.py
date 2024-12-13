@@ -832,6 +832,7 @@ def remove_session_location(session_location_id: str):
     except Exception as e:
         return {"success": False, "error": f"Database error: {e}"}, 500
 
+
 def new_entry(session_id: str = "", session_location_id: str = "", title: str = "", description: str = "", tagged_description: str = "", entry_index: int = 0) -> tuple[dict, int]:
 
     if not session_id or not session_location_id:
@@ -912,5 +913,17 @@ def get_tags(type='all'):
     return {'success': True, 'content': tags}, 200
 
 
+def is_valid_session(session_id) -> bool:
+
+    try:
+        int(session_id)
+    except ValueError as e:
+        return False
+    
+    pattern = r'^\d{8}$'
+
+    return bool(re.match(pattern, session_id))
+    
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=(int('3000')), debug=True)
