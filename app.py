@@ -43,14 +43,11 @@ def home():
 @app.route("/<int:session_id>")
 def view_session(session_id):
     heros, _ = get_session_heros(session_id)
-    # encouter, _ = get_session_encounter()
+    encounters, _ = get_session_encounters(session_id)
     payload = {
         'id': session_id,
         'heros': heros['content'],
-        'encounters':[
-            {'name': 'Othran', 'role': 'Paladin'},
-            {'name': 'Othran', 'role': 'Paladin'}
-        ],
+        'encounters':encounters['content'],
         'locations':[
             {'name': 'dynnegal', 'events':[
                 {'title': '1', 'description': '1'},
@@ -713,7 +710,27 @@ def get_session_heros(session_id) -> tuple[dict, int]:
             )
         return {"success": True, "content": heros}, 200
     except Exception as e:
-        return {"success": False, "error": f"Database error: {e}"}, 500
+        return {"success": False, "error": f"Unable to retrive session_hero\nDatabase error: {e}"}, 500
+
+
+def get_session_encounters(session_id) -> tuple[dict, int]:
+    if not is_valid_session(session_id):
+        return {'success': False, 'error': f'Unable to retrive session_encounter\n{session_id = }, is an invalid id format please provide a 8 digit long id'}, 404
+    
+    try:
+        encounters = db.execute(f'''
+            SELECT encounters.session_id, encounters.character_id, encounters.location_id, 
+            characters.name AS character_name, 
+            locations.name AS location_name
+            FROM encounters
+            JOIN characters ON encounters.character_id = characters.id
+            JOIN locations ON encounters.location_id = locations.id
+            WHERE encounters.session_id = ?;
+            ''',session_id
+            )
+        return {"success": True, "content": encounters}, 200
+    except Exception as e:
+        return {"success": False, "error": f"Unable to retrive session_encounter\nDatabase error: {e}"}, 500
 
 
 def add_tag(tag: str, tag_type: str) -> tuple[dict, int]:
