@@ -18,6 +18,74 @@
     </div>
 </div>
 
+
+    
+<hr>
+<h2>Report Date: </h2>
+<ul>
+    {% if dnd_session.date %}
+        {{ dnd_session.date }}        
+    {% else %}
+        <em>No Date</em>
+    {% endif %} 
+</ul>
+<hr>
+
+<h4><strong>Heroes Involved:</strong></h4>
+<ul>
+    {% for hero in dnd_session.heros %}
+        
+        <li><strong><a href="">{{hero.name}}</a></strong> - <em>{{ hero.role }}</em></li>
+    {% else %}
+        <em>No Heros</em>
+    {% endfor %}
+    
+</ul>
+<hr>
+<h4><strong>Encounters of the Day:</strong></h4>
+<ul>
+    {% for encounter in dnd_session.encounters %}
+        
+        <li><strong><a href="">{{encounter.name}}</a></strong> - <em>{{ encounter.role }}</em></li>
+    {% else %}
+        <em>No Encounter</em>
+    {% endfor %}
+    
+</ul>
+<hr>
+<h4><strong>Chronology of Events:</strong></h4>
+
+<ul>
+    {% for location in dnd_session.locations %}
+        <li>
+            <h5><a href="/{{location.name}}">{{ location.name }}</a></h5>
+        <ol>
+            {% for event in location.events %}
+                <li>
+                    {{ event.description }}
+                </li>
+            {% else %}
+                <em>No Events</em>
+            {% endfor %}
+            
+        </ol></li>
+        
+    {% else %}
+        <em>No Locations</em>
+    {% endfor %}
+</ul>
+    
+<hr>
+<h2><strong>Conclusion:</strong></h2>
+    <ul>
+        {% if dnd_session.conclusion %}
+            dnd_session.conclusion
+        {% else %}
+            <em>No Conclusion</em>
+        {% endif %}
+    </ul>
+    
+
 {% endblock %}
 {% block script %}
 

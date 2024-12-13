@@ -43,7 +43,21 @@ def home():
 @app.route("/<int:session_id>")
 def view_session(session_id):
     payload = {
-        'id': session_id
+        'id': session_id,
+        'heros':[
+            {'name': 'Othran', 'role': 'Paladin'},
+            {'name': 'Othran', 'role': 'Paladin'}
+        ],
+        'encounters':[
+            {'name': 'Othran', 'role': 'Paladin'},
+            {'name': 'Othran', 'role': 'Paladin'}
+        ],
+        'locations':[
+            {'name': 'dynnegal', 'events':[
+                {'title': '1', 'description': '1'},
+                {'title': '2', 'description': '2'}
+            ]}
+        ]
     }
     return render_template('view_session.html', dnd_session=payload)  
 
