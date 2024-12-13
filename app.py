@@ -42,12 +42,11 @@ def home():
 
 @app.route("/<int:session_id>")
 def view_session(session_id):
+    heros, _ = get_session_heros(session_id)
+    # encouter, _ = get_session_encounter()
     payload = {
         'id': session_id,
-        'heros':[
-            {'name': 'Othran', 'role': 'Paladin'},
-            {'name': 'Othran', 'role': 'Paladin'}
-        ],
+        'heros': heros['content'],
         'encounters':[
             {'name': 'Othran', 'role': 'Paladin'},
             {'name': 'Othran', 'role': 'Paladin'}
@@ -699,6 +698,24 @@ def db_remove_session_location():
 ################################################################################
 
 
+def get_session_heros(session_id) -> tuple[dict, int]:
+
+    if not is_valid_session(session_id):
+        return {'success': False, 'error': f'Unable to retrive session_hero\n{session_id = }, is an invalid id format please provide a 8 digit long id'}, 404
+    
+    try:
+        heros = db.execute(f'''
+            SELECT characters.id, characters.name, characters.classe, characters.tag_id, characters.type 
+            FROM heros
+            JOIN characters ON heros.character_id = characters.id
+            WHERE heros.session_id = ?;
+            ''',session_id
+            )
+        return {"success": True, "content": heros}, 200
+    except Exception as e:
+        return {"success": False, "error": f"Database error: {e}"}, 500
+
+
 def add_tag(tag: str, tag_type: str) -> tuple[dict, int]:
     """
     Create a new tag in the database.
@@ -922,7 +939,7 @@ def is_valid_session(session_id) -> bool:
     
     pattern = r'^\d{8}$'
 
-    return bool(re.match(pattern, session_id))
+    return bool(re.match(pattern, str(session_id)))
     
     
 if __name__ == "__main__":
