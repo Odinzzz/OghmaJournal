@@ -44,16 +44,15 @@ def home():
 def view_session(session_id):
     heros, _ = get_session_heros(session_id)
     encounters, _ = get_session_encounters(session_id)
+    bar, foo = get_session_entries(session_id)
+    print("HALLO")
+    for key in bar['locations']:
+        print(key)
     payload = {
         'id': session_id,
         'heros': heros['content'],
         'encounters':encounters['content'],
-        'locations':[
-            {'name': 'dynnegal', 'events':[
-                {'title': '1', 'description': '1'},
-                {'title': '2', 'description': '2'}
-            ]}
-        ]
+        'locations': bar['locations']
     }
     return render_template('view_session.html', dnd_session=payload)  
 
@@ -70,7 +69,7 @@ def get_sessions():
 
 @app.route("/get_entries/<int:session_id>")
 def get_entries(session_id):
-
+    # TODO: change it to use the function instead
 
     try:
     # get all he location for a session
@@ -731,6 +730,57 @@ def get_session_encounters(session_id) -> tuple[dict, int]:
         return {"success": True, "content": encounters}, 200
     except Exception as e:
         return {"success": False, "error": f"Unable to retrive session_encounter\nDatabase error: {e}"}, 500
+
+
+def get_session_entries(session_id) -> tuple[dict, int]:
+    try:
+    # get all he location for a session
+
+        session_locations = db.execute('SELECT * FROM sessionlocations WHERE session_id = ? ORDER BY crono_index;', session_id)
+        response = {
+            "success": True,
+            "session_id": session_id,
+            "session_title": "",
+            "locations":{}
+            } 
+
+        
+
+        for session_location in session_locations:
+
+            location_data:dict = db.execute('SELECT * FROm locations WHERE id= ?;', session_location['location_id'])
+
+            location_entries = db.execute('SELECT * FROM entries WHERE session_id = ? and session_location_id = ? ORDER BY entry_index;', session_id, session_location.get('id'))
+
+            
+            
+
+            crono_index = str(session_location['crono_index'])  # Convert to string
+
+            response['locations'][crono_index] = {
+                'location_name': location_data[0].get('name'),
+                'session_location_id': session_location.get('id'),
+                'location_id': location_data[0].get('id'),
+                "entries":[]
+            }
+            for location_entry in location_entries:
+                
+
+                response['locations'][crono_index]['entries'].append({
+                    "entry_id": location_entry.get('id'),
+                    "entry_index": location_entry.get('entry_index'),
+                    "entry_title": location_entry.get('title'),
+                    "entry_description": location_entry.get('description'),
+                    "entry_tagged": location_entry.get('tagged_description')
+                    
+                })        
+       
+        
+    except Exception as e:
+        print(f'MYEXEPTION: {e}')
+        return {"success": False, "error": f"DataBaseError: {e}"}, 500
+    
+    return response, 200
 
 
 def add_tag(tag: str, tag_type: str) -> tuple[dict, int]:

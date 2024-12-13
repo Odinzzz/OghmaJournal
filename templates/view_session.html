@@ -56,13 +56,13 @@
 <h4><strong>Chronology of Events:</strong></h4>
 
 <ul>
-    {% for location in dnd_session.locations %}
+    {% for key in dnd_session.locations %}
         <li>
-            <h5><a href="/{{location.name}}">{{ location.name }}</a></h5>
+            <h5><a href="/{{ dnd_session.locations[key].location_name }}">{{ dnd_session.locations[key].location_name }}</a></h5>
         <ol>
-            {% for event in location.events %}
-                <li>
-                    {{ event.description }}
+            {% for entry in dnd_session.locations[key].entries %}
+                <li class="mb-3">
+                    {{ entry.entry_description }}
                 </li>
             {% else %}
                 <em>No Events</em>
