@@ -117,7 +117,8 @@ function exportDataToFile(data) {
     link.href = URL.createObjectURL(blob);
     link.download = 'all_tags.json'; // File name
     link.click();
+    limk.remove()
   }
   
-  exportDataToFile(data);
+exportDataToFile(data);
   

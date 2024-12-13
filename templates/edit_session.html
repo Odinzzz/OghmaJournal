@@ -20,10 +20,10 @@
 </div>
 <button id="tagall" class="btn btn-primary">Tag All</button>
 
+<!-- ADD HERO SECTION -->
 <h3>Heros:</h3>
 <div>
 
-    
     
     <div class="row">
         <div class="col-6">
@@ -44,7 +44,7 @@
                         <input 
                             type="text" 
                             class="form-control" 
-                            id="dropdownSearch" 
+                            id="heroDropdownSearch" 
                             placeholder="Type to search..."
                         />
                     
@@ -64,8 +64,63 @@
 <h3>Events:</h3>
 
 <ul id="entries_container" class="container ">
-    <button class="btn btn-primary">New Location</button>
+    
+    <div id="locationDropDownContainer" class="col-auto mb-1">
+        <div class="dropdown">
+            <button 
+            type="button" 
+            class="btn btn-primary dropdown-toggle py-2" 
+            data-bs-toggle="dropdown" 
+            aria-expanded="false">
+            Add Location
+            </button>
+        
+            <div class="dropdown-menu p-2" style="min-width: 300px;">
+            <!-- Search Input -->
+            <input 
+                type="text" 
+                class="form-control" 
+                id="locationDropdownSearch" 
+                placeholder="Type to search..."
+            />
+        
+            <!-- List of Items -->
+            <ul class="list-unstyled mt-2" id="locationDropdownList" style="max-height: 150px; overflow-y: auto;">
+                <!-- add button there with get_entry.js -->
+                <!-- Add Location Button -->
+                <li>
+                    <button type="button" class="btn btn-primary add_location_to_database">Add Location</button>
+                </li>
+            </ul>
+            </div>
+        </div>
+    </div> 
 </ul>
+
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="addLocationModal" tabindex="-1" aria-labelledby="addLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLocationModalLabel">Add New Location</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addLocationForm">
+                    <div class="mb-3">
+                    <label for="locationName" class="form-label">Location Name</label>
+                    <input type="text" class="form-control" id="locationName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                    <label for="locationRegion" class="form-label">Region</label>
+                    <input type="text" class="form-control" id="locationRegion" name="region">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

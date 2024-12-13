@@ -13,6 +13,8 @@ class config():
 
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{DB}"
 
+    DM = "\033[32mDEBUG:\033[0m"
+    DEBUG = True
 
 
-    LANG = "french" # french or english lowercase
+    LANG = "french"  # french or english lowercase

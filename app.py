@@ -1,9 +1,10 @@
+from sre_constants import SUCCESS
 import uuid
 import re
 
 
 
-from flask import Flask, jsonify,render_template, request, abort
+from flask import Flask, jsonify,render_template, request, abort, session
 from flask_cors import CORS
 
 from cs50.sql import SQL
@@ -52,12 +53,71 @@ def get_sessions():
 @app.route("/get_entries/<int:session_id>")
 def get_entries(session_id):
 
+
+    try:
+    # get all he location for a session
+
+        session_locations = db.execute('SELECT * FROM sessionlocations WHERE session_id = ? ORDER BY crono_index;', session_id)
+        response = {
+            "session_id": session_id,
+            "session_title": "",
+            "locations":{}
+            } 
+
+        
+
+        for session_location in session_locations:
+
+            location_data:dict = db.execute('SELECT * FROm locations WHERE id= ?;', session_location['location_id'])
+
+            location_entries = db.execute('SELECT * FROM entries WHERE session_id = ? and session_location_id = ? ORDER BY entry_index;', session_id, session_location.get('id'))
+
+            
+            
+
+            crono_index = str(session_location['crono_index'])  # Convert to string
+
+            response['locations'][crono_index] = {
+                'location_name': location_data[0].get('name'),
+                'session_location_id': session_location.get('id'),
+                'location_id': location_data[0].get('id'),
+                "entries":[]
+            }
+            for location_entry in location_entries:
+                
+
+                response['locations'][crono_index]['entries'].append({
+                    "entry_id": location_entry.get('id'),
+                    "entry_index": location_entry.get('entry_index'),
+                    "entry_title": location_entry.get('title'),
+                    "entry_description": location_entry.get('description'),
+                    "entry_tagged": location_entry.get('tagged_description')
+                    
+                })
+        
+       
+        
+    except Exception as e:
+        print(f'MYEXEPTION: {e}')
+        return jsonify({"success": False, "error": f"DataBaseError: {e}"}), 500
+    
+    
+
+    return jsonify(response), 200
+    
+
+@app.route("/get_entries_old/<int:session_id>")
+def get_entries_old(session_id):
+
+
+
     try:
         db_data = db.execute("""
             SELECT 
                 sessions.title AS session_title,
                 sessions.summary AS session_summary,
                 locations.name AS location_name,
+                locations.id AS location_id,             
                 sessionlocations.crono_index AS location_index,
                 tags.tag AS location_tag,
                 tags.id AS tag_id,
@@ -91,7 +151,7 @@ def get_entries(session_id):
 
     for data in db_data:
         if data['location_index'] not in session_data['locations']:
-            session_data['locations'][data['location_index']] = {'location_name': data['location_name'], "entries": []}
+            session_data['locations'][data['location_index']] = {'location_name': data['location_name'], 'location_id': data['location_id'], 'location_index': data['location_index'], "entries": []}
         
         session_data['locations'][data['location_index']]['entries'].append({
             "entry_id": data['entry_id'],
@@ -115,7 +175,21 @@ def get_characters():
     if not characters:
         return jsonify({"success": False, "error": f"character found"}), 400
     
-    return jsonify({"success": True, "content": characters}), 500
+    return jsonify({"success": True, "content": characters}), 200
+
+
+@app.route("/get_locations")
+def get_locations():
+
+    try:
+        locations = db.execute("SELECT * FROM locations;")
+    except Exception as e:
+        return jsonify({"success": False, "error": f"DataBaseError: {e}"}), 500
+    
+    if not locations:
+        return jsonify({"success": False, "error": f"character found"}), 400
+    
+    return jsonify({"success": True, "content": locations}), 200
 
 
 @app.route("/get_heros/<session_id>")
@@ -216,7 +290,7 @@ def edit_session(session_id):
 
     if dnd_session:
 
-        if dnd_session[0]['session_state'] == 0:
+        if dnd_session[0]['session_state'] == 100: # refractor this to remove draft
             return render_template("draft.html",dnd_session=dnd_session[0])
         else:
             return render_template("edit_session.html", dnd_session=dnd_session[0])
@@ -234,6 +308,7 @@ def process_draft():
     session_id = data.get('session_id')
     content = data.get('html')
 
+    
     if session_id is None or content is None:
         return jsonify({"success": False, "error": "Bad request: content or session_id cannot be null"}), 400
 
@@ -244,6 +319,7 @@ def process_draft():
     
     try:
         process_content = quill_processing(content)
+        
     except ValueError as e:
         return jsonify({"success": False, "error": f"{e}"}), 400 # order list not use or empty
     
@@ -270,6 +346,8 @@ def process_draft():
 
         for location_name in location:
             location_id = location_dict.get(location_name)
+
+            print(location_id)
 
             if not location_id: # check with ai if there is a typo or not
 
@@ -300,7 +378,7 @@ def process_draft():
                     check_name: str = check.get('name')
                     if not check_name:
                         return jsonify({"success": False, 'error': 'ai messed up'}), 500                   
-                    location_id = db.execute("SELECT id FROM locations WHERE name = ?", check_name.lower() )
+                    location_id = db.execute("SELECT id FROM locations WHERE name = ?", check_name )
                     if not location_id:
                         return jsonify({"success": False, "error": "fail to retrieve database entry"}), 500
                     location_id = location_id[0]['id'] # make sure that location id is a string
@@ -308,7 +386,7 @@ def process_draft():
 
                 location_id = location_id['id'] # make sure that location id is a string 
 
-
+                print(f'{session_id = } {location_id = } {location_index = }')
             db.execute("INSERT INTO sessionlocations (session_id, location_id, crono_index) VALUES (?, ?, ?);", session_id, location_id , int(location_index))
 
 
@@ -324,6 +402,10 @@ def process_draft():
 
 
     return jsonify({"success": True, "session": session_id}), 201
+
+################################################################################
+#                                    TOOLS                                     #
+################################################################################
 
 
 @app.route("/tool/ai/tag_description/<entry_id>", methods=["PATCH"])
@@ -370,6 +452,10 @@ def tool_correct_string():
     response, code = correct_string(string)
     return jsonify(response), code
 
+
+################################################################################
+#                                    DATABASE                                  #
+################################################################################
 
 @app.route("/db/add_hero", methods=['POST'])
 def add_hero():
@@ -510,29 +596,245 @@ def db_delete_entry(entry_id):
         return jsonify({"success": True})
     else:
         return jsonify({"success": False, 'error': 'Deletion fail'})
-# Functions
 
 
-def add_tag(tag: str, tag_type: str):
+@app.route('/db/add_location', methods=['POST'])
+def db_add_location():
+
+    try:
+        # Extract data from the request JSON payload
+        data = request.get_json()
+        if not data:
+            return jsonify({"success": False, "error": "Missing JSON payload"}), 400
+
+        name = data.get('name')
+        region = data.get('region', "")  # Optional parameter, defaults to an empty string
+
+        # Validate input
+        if not name or not isinstance(name, str):
+            return jsonify({"success": False, "error": "Invalid 'name' parameter"}), 400
+
+        # Call the add_location function
+        result, status_code = add_location(name=name, region=region)
+        return jsonify(result), status_code
+
+    except Exception as e:
+        # Handle unexpected errors
+        return jsonify({"success": False, "error": f"Internal Server Error: {e}"}), 500
+
+
+@app.route('/db/add_session_location', methods=['POST'])
+def db_add_session_location():
+    data:dict = request.json
+
+    location_id = data.get('locationId')
+    session_id = data.get('sessionId')
+    index = data.get('index')
+    result, status_code = add_session_location(location_id=location_id,session_id=session_id,index=index)
+    return jsonify(result), status_code
+
+
+@app.route('/db/new_entry', methods=['POST'])
+def db_new_entry():
+    print(request)
+    data: dict = request.json
+    session_id = data.get("session_id")
+    session_location_id = data.get("session_location_id")
+    title = data.get("title", "")
+    description = data.get("description", "")
+    tagged_description = data.get("tagged_description", "")
+    entry_index = int(data.get("entry_index", 0))
+
+    if config.DEBUG : print(f'{config.DM} Calling new_entry({session_id = }, {session_location_id = }, {title = }, {description = }, {tagged_description = }, {entry_index = })')
+
+    result, status_code = new_entry(
+        session_id=session_id,
+        session_location_id=session_location_id,
+        title=title, description=description, 
+        tagged_description=tagged_description,
+        entry_index=entry_index
+    )
+
+    if config.DEBUG: print(f'{config.DM} new_entry() -> {result = }, {status_code = }')
+
+    return jsonify(result), status_code
+
+
+@app.route('/db/remove_session_location', methods=['DELETE'])
+def db_remove_session_location():
+
+    data:dict = request.json
+
+    session_location_id = data.get('session_location_id', '')
+
+    
+    result, status_code = remove_session_location(session_location_id=session_location_id)
+    return jsonify(result), status_code
+
+
+################################################################################
+#                                   FUNCTIONS                                 #
+################################################################################
+
+
+def add_tag(tag: str, tag_type: str) -> tuple[dict, int]:
     """
-    Shared function to handle tag creation logic.
+    Create a new tag in the database.
+
+    Args:
+        tag (str): The tag string to be added.
+        tag_type (str): The type of the tag.
+
+    Returns:
+        tuple: A JSON-style response with a status code.
     """
-    if not tag or not tag_type:
-        return {"success": False, 'error': 'Fail to create Tag: tag and tag_Type cannot be Null'}, 400
+    if not tag.strip() or not tag_type.strip():
+        return {"success": False, 'error': 'Tag and tag_type cannot be empty'}, 400
 
     # Validate tag format
     pattern = r'@JournalEntry\[[^\[\]{}]+\]\{[^\[\]{}]+\}'
     if not re.fullmatch(pattern, tag):
-        return {"success": False, 'error': 'Fail to create Tag: Invalid tag format'}, 400
+        return {"success": False, 'error': 'Invalid tag format'}, 400
 
-    # Check if tag exists
-    if db.execute('SELECT * FROM tags WHERE tag = ?;', tag):
-        return {"success": False, 'error': f"Fail to create Tag: {tag} already exists"}, 400
+    try:
+        if db.execute('SELECT 1 FROM tags WHERE tag = ?;', tag):
+            return {"success": False, 'error': f"Tag '{tag}' already exists"}, 400
 
-    # Insert tag
-    tag_id = str(uuid.uuid4())
-    db.execute("INSERT INTO tags (id, tag, tag_type) VALUES (?, ?, ?);", tag_id, tag, tag_type)
-    return {'id': tag_id, 'tag': tag, 'tag_type': tag_type}, 200
+        # Insert tag
+        tag_id = str(uuid.uuid4())
+        db.execute("INSERT INTO tags (id, tag, tag_type) VALUES (?, ?, ?);", tag_id, tag, tag_type)
+        return {
+            'success': True,
+            'content': {
+                'id': tag_id,
+                'tag': tag,
+                'tag_type': tag_type
+            }
+        }, 200
+    except Exception as e:
+        return {"success": False, "error": f"Database error: {e}"}, 500
+
+
+def add_location(name: str, region: str = "") -> tuple[dict, int]:
+    """
+    Add a new location to the database.
+
+    Args:
+        name (str): The name of the location.
+        region (str, optional): The region of the location. Defaults to "".
+
+    Returns:
+        tuple: A JSON-style response with a status code.
+    """
+    if not name.strip():
+        return {'success': False, "error": "Location name cannot be empty"}, 400
+
+    try:
+        if db.execute("SELECT 1 FROM locations WHERE name = ?;", name):
+            return {'success': False, 'error': f"Location '{name}' already exists in the database"}, 400
+
+        # Create a tag for the location
+        tag_name = f"@JournalEntry[{name}]{{{name}}}"
+        new_tag, code = add_tag(tag_name, 'location')
+
+        if not new_tag['success']:
+            return new_tag, code
+
+        new_tag_data = new_tag.get('content')
+        if not new_tag_data:
+            return {"success": False, "error": "Unexpected error during tag creation"}, 500
+
+        location_id = str(uuid.uuid4())
+        db.execute(
+            'INSERT INTO locations (id, name, region, tag_id) VALUES (?, ?, ?, ?);',
+            location_id, name, region, new_tag_data['id']
+        )
+        return {
+            'success': True,
+            'content': {
+                'location_id': location_id,
+                'location_name': name,
+                'location_region': region,
+                'tag_id': new_tag_data['id']
+            }
+        }, 200
+
+    except Exception as e:
+        # Cleanup created tag if location creation fails
+        try:
+            if new_tag_data and new_tag_data.get('id'):
+                db.execute('DELETE FROM tags WHERE id = ?;', new_tag_data['id'])
+        except Exception as cleanup_error:
+            return {
+                "success": False,
+                "error": f"Failed to create location and encountered error during cleanup: {cleanup_error}"
+            }, 500
+        return {"success": False, "error": f"Database error: {e}"}, 500
+
+
+def add_session_location(location_id: str, session_id: str, index: int) -> tuple[dict, int]:
+
+    if not location_id or not session_id :
+        response = {'succes': False, 'error': f'{location_id = }, {session_id = } and {index = } cannot be none' }
+        if config.DEBUG : print(f'{config.DM} add_session_location() -> {response} ')
+        return response , 500
+    
+
+    
+    try:
+
+        int_index = int(index)
+        new_id = str(uuid.uuid4())
+        db.execute('INSERT INTO sessionlocations (id, session_id, location_id, crono_index) VALUES (?, ? , ?, ?);',new_id, session_id, location_id, int_index)
+
+        response = {
+            'success': True,
+            'content':{ 
+                'session_location_id': new_id,       
+                'session_id': session_id,
+                'location_id': location_id,
+                'location_index': int_index,
+            }
+        }
+
+        if config.DEBUG : print(f'{config.DM} add_session_location() -> {response} ')
+        return response, 200
+    except Exception as e:
+        return {"success": False, "error": f"Database error: {e}"}, 500
+
+
+def remove_session_location(session_location_id: str):
+    try:
+        db.execute('DELETE FROM sessionlocations WHERE id = ?;', session_location_id)
+        return {'success': True, 'content': f'{session_location_id = }'}, 200
+    except Exception as e:
+        return {"success": False, "error": f"Database error: {e}"}, 500
+
+def new_entry(session_id: str = "", session_location_id: str = "", title: str = "", description: str = "", tagged_description: str = "", entry_index: int = 0) -> tuple[dict, int]:
+
+    if not session_id or not session_location_id:
+        return {'success': False, 'error': f'Unable to create new entry ({session_id = }) and ({session_location_id = }) cannot be null'}, 400
+    
+    try:
+        new_entry_id = str(uuid.uuid4())
+        _ = db.execute(
+            'INSERT INTO entries (id, session_id, session_location_id, title, description, tagged_description, entry_index) VALUES (?,?,?,?,?,?,?);',
+            new_entry_id, session_id, session_location_id, title, description, tagged_description, entry_index    
+        )
+
+        if _:
+            return {"success": True, 'content':{
+                'entry_id': new_entry_id,
+                'session_location_id': session_location_id,
+                'session_id': session_id,  
+                'entry_title': title,
+                'entry_description': description, 
+                'entry_tagged': tagged_description, 
+                'entry_index': entry_index 
+            }}, 200
+
+    except Exception as e:
+        return {"success": False, "error": f'DataBaseError: {e}'}, 500 
 
 
 def update_entry(field: str, value: str, entry_id: str):

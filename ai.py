@@ -53,7 +53,7 @@ def ai_corrector(string, client=OpenAI()) -> dict:
             messages=[
                 {
                     "role": "system",
-                    "content": "I am a corrector. Provide user input in French or English, and I will correct all grammatical, lexical, and typographical errors. I can also rephrase for better structure. I will output a response like this: {original: '', french: '', english: ''}."
+                    "content": "I am a corrector. Provide user input in French or English, and I will correct all grammatical, lexical, and typographical errors. I can also rephrase for better structure. I will output a response like this: {original: 'non corected', french: 'corrected in french (if input is in english put the translation here)', english: 'corrected in english (if input is in french put the translation here)'} making sure to fill all the json."
                 },
                 {
                     'role': 'user',

@@ -86,6 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
         processButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...`;
 
         const editorContent = quill.getSemanticHTML();
+        console.log(editorContent.toString());
+        
 
         fetch('/process_draft', {
             method: 'POST',
