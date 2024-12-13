@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 
-{% block title %}edit session{% endblock %}
+{% block title %}edit {{ dnd_session.id }}{% endblock %}
 {% block head %}
 
 {% endblock %}
@@ -13,7 +13,8 @@
         <h2 id="session_id" data-session-id="{{ dnd_session.id }}">{{ dnd_session.id }}</h2>
     </div>
     <div class="col-auto">
-        <button class="btn save-session-btn p-1 ">💾</button>
+        <!-- This depend that the get_entries.js is loaded because the view_session fuction come from there -->
+        <button class="btn save-session-btn p-1" onclick="view_session({{ dnd_session.id }})"">💾</button>
         <button class="btn delete-session-btn p-1 ">🗑️</button>
     </div>
 

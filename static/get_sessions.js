@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 newListItem.classList.add("nav-item");
 
                 newListItem.innerHTML = `
-                    <button data-session-id="${session.id}" class="nav-link" onclick="edit_session('${session.id}')">
+                    <button data-session-id="${session.id}" class="nav-link" onclick="view_session('${session.id}')">
                         ${session.id}
                     </button>
                 `;
@@ -33,4 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function edit_session(session_id) {
     // Redirect to the edit session page
     window.location.href = `/edit_session/${session_id}`;
+}
+
+function view_session(session_id) {
+
+    window.location.href = `/${session_id}`;
+    
 }

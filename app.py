@@ -40,6 +40,14 @@ def home():
     return render_template("layout.html")
 
 
+@app.route("/<int:session_id>")
+def view_session(session_id):
+    payload = {
+        'id': session_id
+    }
+    return render_template('view_session.html', dnd_session=payload)  
+
+
 @app.route("/get_sessions", methods=['POST'])
 def get_sessions():
     try:

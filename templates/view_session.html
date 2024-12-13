@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+
+{% block title %}{{ dnd_session.id }}{% endblock %}
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<div class="container-flex text-center">
+
+    <div class="row justify-content-between">
+    
+        <h1 class="col-auto mb-0 ">{{ dnd_session.id}}</h1>
+        
+        <!-- This depend that the get_entries.js is loaded because the edit_session fuction come from there -->
+        <button class="btn col-auto p-0 fs-1" id="editSession" onclick="edit_session({{ dnd_session.id }})">📝</button>
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+
+{% endblock %}
