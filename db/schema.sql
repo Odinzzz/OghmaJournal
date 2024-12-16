@@ -39,6 +39,7 @@ CREATE TABLE heros (
 
 -- Table: encounters
 CREATE TABLE encounters (
+    id TEXT PRIMARY KEY NOT NULL, -- Unique and cannot be null
     session_id TEXT NOT NULL, -- Link to sessions.id
     character_id TEXT NOT NULL, -- Link to characters.id
     location_id TEXT NOT NULL, -- Link to locations.id
@@ -64,6 +65,7 @@ CREATE TABLE entries (
 
 -- Table: key_events
 CREATE TABLE key_events (
+    id TEXT PRIMARY KEY NOT NULL, -- Unique and cannot be null
     title TEXT,
     impact TEXT,
     session_id TEXT NOT NULL, -- Link to sessions.id
@@ -90,10 +92,11 @@ CREATE TABLE members (
 
 -- Table: relatedevents
 CREATE TABLE relatedevents (
-    event_id TEXT NOT NULL, -- Reference to an event (could refer to key_events or other future tables)
+    entry_id TEXT NOT NULL, -- Reference to an event (could refer to key_events or other future tables)
     character_id TEXT NOT NULL, -- Link to characters.id
     PRIMARY KEY (event_id, character_id), -- Composite primary key
     FOREIGN KEY (character_id) REFERENCES characters (id) ON DELETE CASCADE -- Ensure referential integrity
+    FOREIGN KEY (entry_id) REFERENCES entries (id) ON DELETE CASCADE -- Ensure referential integrity
 );
 
 -- Table: sessionlocations

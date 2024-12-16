@@ -50,9 +50,9 @@ def view_session(session_id):
         print(key)
     payload = {
         'id': session_id,
-        'heros': heros['content'],
-        'encounters':encounters['content'],
-        'locations': bar['locations']
+        'heros': heros.get('content'),
+        'encounters':encounters.get('content'),
+        'locations': bar.get('locations')
     }
     return render_template('view_session.html', dnd_session=payload)  
 

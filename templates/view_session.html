@@ -33,23 +33,34 @@
 
 <h4><strong>Heroes Involved:</strong></h4>
 <ul>
-    {% for hero in dnd_session.heros %}
+
+    {% if dnd_session.heros %}
         
-        <li><strong><a href="">{{hero.name}}</a></strong> - <em>{{ hero.role }}</em></li>
+        {% for hero in dnd_session.heros %}
+            
+            <li><strong><a href="">{{hero.name}}</a></strong> - <em>{{ hero.role }}</em></li>
+        {% else %}
+            <em>No Heros</em>
+        {% endfor %}
     {% else %}
         <em>No Heros</em>
-    {% endfor %}
+    {% endif %}
     
 </ul>
 <hr>
 <h4><strong>Encounters of the Day:</strong></h4>
 <ul>
-    {% for encounter in dnd_session.encounters %}
+    {% if dnd_session.encounters %}
+        {% for encounter in dnd_session.encounters %}
+            
+            <li><strong><a href="">{{encounter.name}}</a></strong> - <em>{{ encounter.role }}</em></li>
+        {% else %}
+            <em>No Encounter</em>
+        {% endfor %}
         
-        <li><strong><a href="">{{encounter.name}}</a></strong> - <em>{{ encounter.role }}</em></li>
     {% else %}
         <em>No Encounter</em>
-    {% endfor %}
+    {% endif %}
     
 </ul>
 <hr>
