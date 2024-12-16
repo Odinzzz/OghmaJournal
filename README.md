@@ -1,14 +1,13 @@
 # Oghma Journal
 
-[![Version](https://img.shields.io/badge/version-00.00.03.00-blue.svg)](CHANGELOG.md)  
-[![Build Status](https://github.com/odinzzz/oghmajournal/actions/workflows/ci.yml/badge.svg)](https://github.com/odinzzz/oghmajournal/actions)  
+[![Version](https://img.shields.io/badge/version-00.00.03.00-blue.svg)](changelog.md)  
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 ## Overview
 
 Welcome to **Oghma journal**! This project is actively maintained and currently in **[Development/Pre-Alpha]** phase.  
 
-### [View the Full Changelog](CHANGELOG.md)
+### [View the Full Changelog](changelog.md)
 
 Check out the detailed changelog to see what's new in the latest version!
 
