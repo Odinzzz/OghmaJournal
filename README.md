@@ -1,4 +1,17 @@
+# Oghma Journal
+
+[![Version](https://img.shields.io/badge/version-00.00.03.00-blue.svg)](CHANGELOG.md)  
+[![Build Status](https://github.com/odinzzz/oghmajournal/actions/workflows/ci.yml/badge.svg)](https://github.com/odinzzz/oghmajournal/actions)  
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 ## Overview
+
+Welcome to **Oghma journal**! This project is actively maintained and currently in **[Development/Pre-Alpha]** phase.  
+
+### [View the Full Changelog](CHANGELOG.md)
+
+Check out the detailed changelog to see what's new in the latest version!
+
 
 The Journal Session Manager is a comprehensive application for organizing and tracking narrative-driven events, characters, locations, and factions. It is tailored for role-playing games (RPGs), collaborative storytelling, or campaign management. Users can dynamically edit, manage, and process sessions, leveraging a structured database to link characters, locations, key events, and factions seamlessly.
 
